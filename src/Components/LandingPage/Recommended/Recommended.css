@@ -1,0 +1,63 @@
+/* Tailwind CSS */
+
+.personalized-picks {
+    padding: 1rem;
+    background-color: lightgray; 
+    width: 100vw;
+  }
+  
+  .personalized-picks h2 {
+    color: #111827; /* Dark text color */
+  }
+  
+  .grid {
+    display: grid;
+    gap: 1.5rem; /* Spacing between grid items */
+  }
+  
+  .property-card {
+    border: 1px solid #e5e7eb; /* Light gray border */
+    border-radius: 0.5rem; /* Rounded corners */
+    background-color: #ffffff; /* White background */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+  
+  .property-card:hover {
+    transform: translateY(-0.25rem); /* Slight lift on hover */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
+  }
+  
+  .property-card img {
+    width: 100%;
+    height: 12rem; /* Fixed height for images */
+    object-fit: cover; /* Maintain aspect ratio and crop */
+    border-bottom: 1px solid #e5e7eb; /* Border between image and content */
+  }
+  
+  .property-card h3 {
+    color: #1f2937; /* Darker text color */
+    margin-bottom: 0.25rem;
+  }
+  
+  .property-card p {
+    color: #6b7280; /* Gray text for location */
+  }
+  
+  .property-card .text-green-500 {
+    color: #10b981; /* Green color for 'Saved' status */
+  }
+  
+  /* Responsive grid */
+  @media (min-width: 640px) {
+    .grid-cols-2 {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .grid-cols-3 {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  
