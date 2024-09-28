@@ -3,6 +3,7 @@ import "./LandingPage.css";
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
 import Recommendations from "./Recommended/Recommended";
+import SearchBox from "../SearchBox/SearchBox";
 
 export const LandingPage = () => {
     const { user } = useUser();
@@ -65,6 +66,7 @@ export const LandingPage = () => {
                     </div>
                 </div>
             </div>
+            <SearchBox />
             <Recommendations />
         </div>
     );
