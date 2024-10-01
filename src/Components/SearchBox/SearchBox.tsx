@@ -1,82 +1,116 @@
-import React, { useState } from 'react';
-import "./SearchBox.css";
+import React, { useState, useEffect, useRef } from 'react';
+import './SearchBox.css';
 
 const SearchBox: React.FC = () => {
-    const [searchLocationTerm, setSearchLocationTerm] = useState("");
-    const [searchCategoryTerm, setSearchCategoryTerm] = useState("");
-    const [searchBudgetTerm, setSearchBudgetTerm] = useState("");
-    const [searchModeTerm, setSearchModeTerm] = useState("");
-    const [searchPropTypeTerm, setSearchPropTypeTerm] = useState("");
+  const [searchLocationTerm, setSearchLocationTerm] = useState<string>("");
+  const [searchCategoryTerm, setSearchCategoryTerm] = useState<string>("");
+  const [searchBudgetTerm, setSearchBudgetTerm] = useState<string>("");
+  const [searchModeTerm, setSearchModeTerm] = useState<string>("");
+  const [searchPropTypeTerm, setSearchPropTypeTerm] = useState<string>("");
 
-    const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchLocationTerm(e.target.value);
-    };
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchLocationTerm(e.target.value);
+  };
 
+  const handleCategoryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSearchCategoryTerm(e.target.value);
+  };
 
-    const handleCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchCategoryTerm(e.target.value);
-    };
+  const handleBudgetChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSearchBudgetTerm(e.target.value);
+  };
 
-    
-    const handleBudgetChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchBudgetTerm(e.target.value);
-    };
+  const handleModeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSearchModeTerm(e.target.value);
+  };
 
-    const handleModeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchModeTerm(e.target.value);
-    };
+  const handlePropTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSearchPropTypeTerm(e.target.value);
+  };
 
-    const handlePropTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchPropTypeTerm(e.target.value);
-    };
-    
-
-    return (
-        <div>
-            <h1>Tell us about your perfect property</h1>
-            <input
-                type="text"
-                placeholder="Enter Location"
-                value={searchLocationTerm} 
-                onChange={handleLocationChange}
-                className="searchbox"
-            />
-
-            <input
-                type="text"
-                placeholder="Choose Category"
-                value={searchCategoryTerm} 
-                onChange={handleCategoryChange}
-                className="searchbox"
-            />
-
-            <input
-                type="text"
-                placeholder="Estimated Budget"
-                value={searchBudgetTerm}
-                onChange={handleBudgetChange}
-                className="searchbox"
-            />
-
-            <input
-                type="text"
-                placeholder="Mode Of Payment"
-                value={searchModeTerm}
-                onChange={handleModeChange}
-                className="searchbox"
-            />
-
-            <input
-                type="text"
-                placeholder="Property Type"
-                value={searchPropTypeTerm}
-                onChange={handlePropTypeChange}
-                className="searchbox"
-            />
-            <p>Searching for: a property in {searchLocationTerm} {searchCategoryTerm} {searchBudgetTerm}</p>
-            
-        </div>
+  const handleSearch = () => {
+    // Implement your search logic here using the search parameters
+    console.log(
+      'Searching for:',
+      searchLocationTerm,
+      searchCategoryTerm,
+      searchBudgetTerm,
+      searchModeTerm,
+      searchPropTypeTerm
     );
-}
+  };
+
+  return (
+    <div>
+      <h1>Tell us about your perfect property</h1>
+
+      <input
+        type="text"
+        placeholder="Enter Location"
+        value={searchLocationTerm}
+        onChange={handleLocationChange}
+        className="searchbox"
+      />
+
+      <select
+        value={searchCategoryTerm}
+        onChange={handleCategoryChange}
+        className="searchbox"
+      >
+        <option value="" disabled>Select Category</option>
+        <option value="For Sale">For Sale</option>
+        <option value="For Rent">For Rent</option>
+        <option value="Sold">Sold</option>
+      </select>   
+
+
+      <select
+        value={searchBudgetTerm}
+        onChange={handleBudgetChange}
+        className="searchbox"
+      >
+        <option value="" disabled>Estimated budget</option>
+        <option value="0-$10k">0-$10k</option>
+        <option value="$10K-$50K">$10K-$50K</option>
+        <option value="Above 50k">Above 50K</option>
+        <option value="Open budget for now">Open Budget for now</option>
+      </select>
+
+      <select
+        value={searchModeTerm}
+        onChange={handleModeChange}
+        className="searchbox"
+      >
+        <option value="" disabled>Mode of Payment</option>
+        <option value="Crypto">Crypto</option>
+        <option value="Cash(Offline)">Cash</option>
+        <option value="Escrow">Escrow</option>  {/* Added missing option */}
+      </select>
+
+      <select
+        value={searchPropTypeTerm}
+        onChange={handlePropTypeChange}
+        className="searchbox"
+      >
+        <option value="" disabled>Property type</option>
+        <option value="Apartment">Apartment</option>
+        <option value="Townhouses/Standalones">Townhouses/Standalones</option>
+        <option value="Lots/Land">Lots/Land</option>
+        <option value="Commercial property">Commercial property</option>
+      </select>
+
+      <p>
+        Searching for:{" "}
+        {searchLocationTerm && `a property in ${searchLocationTerm}`}
+        {searchCategoryTerm && `, ${searchCategoryTerm}`}
+        {searchBudgetTerm && `, with a budget of ${searchBudgetTerm}`}
+      </p>
+
+      <button type="button" onClick={handleSearch}>
+        Search
+      </button>
+    </div>
+  );
+};
 
 export default SearchBox;

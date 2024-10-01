@@ -1,1 +1,17 @@
-
+.searchbox {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 200px; 
+    font-size: 16px;
+    font-family: Roboto, sans-serif; 
+    background-color: #f0f0f0; /* Optional: Change background color */
+  }
+  
+  .searchbox::placeholder {
+    color: #1e1414; 
+  }
+  
+  .searchbox:hover {
+    border-color: hwb(210 64% 32%); /* Optional: Add a hover effect */
+  }
