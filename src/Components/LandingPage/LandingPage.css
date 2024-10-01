@@ -94,7 +94,7 @@
     font-family: "Helvetica-Regular", Helvetica;
     font-size: 16px;
     font-weight: 400;
-    left: 152px;
+    left: 260px;
     letter-spacing: 0;
     line-height: normal;
     position: absolute;
@@ -177,5 +177,18 @@
     line-height: normal;
     position: absolute;
     top: 46px;
+    white-space: nowrap;
+}
+
+.desktop .text-wrapper-7 {
+    color: #ffffff;
+    font-family: "Helvetica-Regular", Helvetica;
+    font-size: 16px;
+    font-weight: 400;
+    left: 570px;
+    letter-spacing: 0;
+    line-height: normal;
+    position: absolute;
+    top: 49px;
     white-space: nowrap;
 }

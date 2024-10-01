@@ -1,11 +1,11 @@
 .searchbox {
-    padding: 10px;
+    padding: 20px;
     border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 200px; 
-    font-size: 16px;
+    border-radius: 35px;
+    width: 160px; 
+    font-size: 12px;
     font-family: Roboto, sans-serif; 
-    background-color: #f0f0f0; /* Optional: Change background color */
+    background-color: rgba 240,240,240, 1;
   }
   
   .searchbox::placeholder {
@@ -13,5 +13,7 @@
   }
   
   .searchbox:hover {
-    border-color: hwb(210 64% 32%); /* Optional: Add a hover effect */
+    border-color: hwb(210 43% 15%); 
+    background-color: rgba 240,240,240, 0.4;
   }
+

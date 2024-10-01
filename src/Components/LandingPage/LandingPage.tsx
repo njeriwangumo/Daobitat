@@ -36,7 +36,7 @@ export const LandingPage = () => {
                     <div className="bg" />
                     <div className="darkoverlay">
                         <div className="search-box">
-                            <img className="search" alt="Search" src="icons8-search-100-1.png" />
+                            <img className="search" alt="Search" src="https://img.icons8.com/?size=100&id=78341&format=png&color=000000" />
                         </div>
                         <p className="we-re-getting-real">
                             We&#39;re getting real about real estate. Navigate the market with transparency.
@@ -51,6 +51,7 @@ export const LandingPage = () => {
                         <div className="div">Rent</div>
                         <div className="text-wrapper-2">Sell</div>
                         <div className="text-wrapper-3">Advertise</div>
+                        <div className="text-wrapper-7">Financing</div>
 
                         {/*Only show signin if username does not esist*/}
                         {!user && <Link to="/login" className="text-wrapper-4">Sign In</Link>}
@@ -62,7 +63,7 @@ export const LandingPage = () => {
                             </div>
                         )}
 
-                        <div className="text-wrapper-5">HAPA</div>
+                        <div className="text-wrapper-5">DAOBITAT</div>
                     </div>
                 </div>
             </div>

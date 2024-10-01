@@ -61,6 +61,7 @@ const SearchBox: React.FC = () => {
         <option value="For Sale">For Sale</option>
         <option value="For Rent">For Rent</option>
         <option value="Sold">Sold</option>
+        <option value="Not Specified">Not Specified</option>
       </select>   
 
 
@@ -73,19 +74,10 @@ const SearchBox: React.FC = () => {
         <option value="0-$10k">0-$10k</option>
         <option value="$10K-$50K">$10K-$50K</option>
         <option value="Above 50k">Above 50K</option>
-        <option value="Open budget for now">Open Budget for now</option>
+        <option value="Not Specified">Not Specified</option>
+         
       </select>
 
-      <select
-        value={searchModeTerm}
-        onChange={handleModeChange}
-        className="searchbox"
-      >
-        <option value="" disabled>Mode of Payment</option>
-        <option value="Crypto">Crypto</option>
-        <option value="Cash(Offline)">Cash</option>
-        <option value="Escrow">Escrow</option>  {/* Added missing option */}
-      </select>
 
       <select
         value={searchPropTypeTerm}
@@ -97,15 +89,27 @@ const SearchBox: React.FC = () => {
         <option value="Townhouses/Standalones">Townhouses/Standalones</option>
         <option value="Lots/Land">Lots/Land</option>
         <option value="Commercial property">Commercial property</option>
+        <option value="Not Specified">Not Specified</option>
+
       </select>
 
-      <p>
-        Searching for:{" "}
-        {searchLocationTerm && `a property in ${searchLocationTerm}`}
-        {searchCategoryTerm && `, ${searchCategoryTerm}`}
-        {searchBudgetTerm && `, with a budget of ${searchBudgetTerm}`}
-      </p>
 
+      <select
+        value={searchModeTerm}
+        onChange={handleModeChange}
+        className="searchbox"
+      >
+        <option value="" disabled>Mode of Payment</option>
+        <option value="Crypto">Crypto</option>
+        <option value="Cash">Cash</option>
+        <option value="Cash">Hybrid</option>
+        <option value="Not Specified">Not Specified</option>
+    
+      </select>
+
+      
+
+      
       <button type="button" onClick={handleSearch}>
         Search
       </button>
