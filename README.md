@@ -2,7 +2,7 @@
 
 DAO-Bitat is a decentralized property listing platform built using **React**, **Firebase**, and **Ethereum**. The platform leverages blockchain technology to tokenize property assets, enabling co-ownership and group decision-making. Integrated with **Google Cloud** for data analysis and **Google Maps** for location services, DAO-Bitat brings transparency and accessibility to real estate investing.
 
-The Minimum Viable Product (MVP) is currently live on the **Lisk** testnet.Lisk is a Layer 2 (L2) network built on Optimism (OP) and secured by Ethereum.
+The Minimum Viable Product (MVP) is currently live on the **Base** testnet.Base is a Layer 2 (L2) network secured by Ethereum.
 
 ## Features
 
