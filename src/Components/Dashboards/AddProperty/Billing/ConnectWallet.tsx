@@ -1,43 +1,121 @@
 import React, { useEffect, useState } from 'react';
 import Web3Modal from 'web3modal';
-import { ethers } from 'ethers';
+import { BrowserProvider, Signer } from 'ethers';
+import { doc, updateDoc, getDoc } from 'firebase/firestore';
+import { useUser } from '../../../../contexts/UserContext';
+import { firestore } from '../../../../firebaseConfig';
 
 const ConnectWallet: React.FC = () => {
-  const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
+  const { user } = useUser();
+  const [provider, setProvider] = useState<BrowserProvider | null>(null);
   const [account, setAccount] = useState<string | null>(null);
+  const [web3Modal, setWeb3Modal] = useState<Web3Modal | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Function to handle wallet connection
+  useEffect(() => {
+    const modal = new Web3Modal({
+      network: "mainnet", // Replace with your preferred network
+      cacheProvider: true,
+    });
+    setWeb3Modal(modal);
+
+    checkExistingWallet();
+  }, [user]);
+
+  const checkExistingWallet = async () => {
+    if (user) {
+      try {
+        const userDocRef = doc(firestore, 'users', user.uid);
+        const userDoc = await getDoc(userDocRef);
+        const userData = userDoc.data();
+        
+        if (userData?.billing?.type === 'metamask' && userData?.billing?.walletAddress) {
+          setAccount(userData.billing.walletAddress);
+          if (web3Modal?.cachedProvider) {
+            connectWallet();
+          }
+        }
+      } catch (error) {
+        console.error("Error checking existing wallet:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    } else {
+      setIsLoading(false);
+    }
+  };
+
   const connectWallet = async () => {
     try {
-      // Create a new instance of Web3Modal
-      const web3Modal = new Web3Modal();
+      if (!web3Modal || !user) return;
 
-      // Connect to the wallet
       const instance = await web3Modal.connect();
-
-      // Use the 'Web3Provider' class in ethers v5
-      const ethersProvider = new ethers.providers.Web3Provider(instance);
+      const ethersProvider = new BrowserProvider(instance);
       setProvider(ethersProvider);
 
-      // Get the signer (connected account)
-      const signer = ethersProvider.getSigner();
+      const signer: Signer = await ethersProvider.getSigner();
       const address = await signer.getAddress();
       setAccount(address);
 
       console.log("Connected Wallet:", address);
+
+      await updateFirestore(address);
+
     } catch (error) {
       console.error("Failed to connect wallet", error);
     }
   };
 
-  useEffect(() => {
-    connectWallet();
-  }, []);
+  const disconnectWallet = async () => {
+    if (web3Modal) {
+      web3Modal.clearCachedProvider();
+    }
+    setProvider(null);
+    setAccount(null);
+
+    if (user) {
+      try {
+        const userDocRef = doc(firestore, 'users', user.uid);
+        await updateDoc(userDocRef, {
+          'billing.type': null,
+          'billing.walletAddress': null
+        });
+      } catch (error) {
+        console.error("Error updating Firestore:", error);
+      }
+    }
+  };
+
+  const updateFirestore = async (walletAddress: string) => {
+    if (user) {
+      try {
+        const userDocRef = doc(firestore, 'users', user.uid);
+        await updateDoc(userDocRef, {
+          billing: {
+            type: 'metamask',
+            walletAddress: walletAddress
+          }
+        });
+        console.log("Wallet information updated in Firestore");
+      } catch (error) {
+        console.error("Error updating Firestore:", error);
+      }
+    } else {
+      console.error("No authenticated user found");
+    }
+  };
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
       {account ? (
-        <p>Connected: {account}</p>
+        <div>
+          <p>Connected: {account}</p>
+          <button onClick={disconnectWallet}>Disconnect Wallet</button>
+        </div>
       ) : (
         <button onClick={connectWallet}>Connect Wallet</button>
       )}
