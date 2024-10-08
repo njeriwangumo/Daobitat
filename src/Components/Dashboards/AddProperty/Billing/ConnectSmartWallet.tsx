@@ -1,26 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import Web3Modal from 'web3modal';
-import { BrowserProvider, Signer } from 'ethers';
+import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { useUser } from '../../../../contexts/UserContext';
 import { firestore } from '../../../../firebaseConfig';
 
-const ConnectMetamask: React.FC = () => {
+const ConnectBaseSmartWallet: React.FC = () => {
   const { user } = useUser();
-  const [provider, setProvider] = useState<BrowserProvider | null>(null);
   const [account, setAccount] = useState<string | null>(null);
-  const [web3Modal, setWeb3Modal] = useState<Web3Modal | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [coinbaseWallet, setCoinbaseWallet] = useState<any>(null);
 
   useEffect(() => {
-    const modal = new Web3Modal({
-      network: "mainnet", // Replace with your preferred network
-      cacheProvider: true,
-    });
-    setWeb3Modal(modal);
-
+    initializeCoinbaseWallet();
     checkExistingWallet();
   }, [user]);
+
+  const initializeCoinbaseWallet = () => {
+    const coinbaseWallet = new CoinbaseWalletSDK({
+      appName: 'Your App Name',
+      appLogoUrl: 'https://example.com/logo.png',
+      
+    });
+    setCoinbaseWallet(coinbaseWallet);
+  };
 
   const checkExistingWallet = async () => {
     if (user) {
@@ -29,11 +31,8 @@ const ConnectMetamask: React.FC = () => {
         const userDoc = await getDoc(userDocRef);
         const userData = userDoc.data();
         
-        if (userData?.billing?.type === 'metamask' && userData?.billing?.walletAddress) {
+        if (userData?.billing?.type === 'coinbaseSmartWallet' && userData?.billing?.walletAddress) {
           setAccount(userData.billing.walletAddress);
-          if (web3Modal?.cachedProvider) {
-            connectWallet();
-          }
         }
       } catch (error) {
         console.error("Error checking existing wallet:", error);
@@ -47,30 +46,37 @@ const ConnectMetamask: React.FC = () => {
 
   const connectWallet = async () => {
     try {
-      if (!web3Modal || !user) return;
+      if (!coinbaseWallet) {
+        console.error("Coinbase Wallet SDK not initialized");
+        return;
+      }
 
-      const instance = await web3Modal.connect();
-      const ethersProvider = new BrowserProvider(instance);
-      setProvider(ethersProvider);
+      // Initialize the Coinbase Wallet provider
+      const provider = coinbaseWallet.makeWeb3Provider('https://base-mainnet.g.alchemy.com/v2/YOUR-API-KEY', 8453);
 
-      const signer: Signer = await ethersProvider.getSigner();
-      const address = await signer.getAddress();
-      setAccount(address);
+      // This will trigger the Coinbase Wallet popup
+      const accounts = await provider.request({ method: 'eth_requestAccounts' });
 
-      console.log("Connected Wallet:", address);
+      if (accounts && accounts.length > 0) {
+        const address = accounts[0];
+        setAccount(address);
+        console.log("Connected Coinbase Smart Wallet:", address);
 
-      await updateFirestore(address);
-
+        await updateFirestore(address);
+      } else {
+        throw new Error("No accounts returned from Coinbase Wallet");
+      }
     } catch (error) {
-      console.error("Failed to connect wallet", error);
+      console.error("Failed to connect Coinbase Smart Wallet", error);
     }
   };
 
   const disconnectWallet = async () => {
-    if (web3Modal) {
-      web3Modal.clearCachedProvider();
+    if (coinbaseWallet) {
+      // Note: There's no built-in disconnect method in the SDK
+      // We'll just clear the local state
+      setCoinbaseWallet(null);
     }
-    setProvider(null);
     setAccount(null);
 
     if (user) {
@@ -92,7 +98,7 @@ const ConnectMetamask: React.FC = () => {
         const userDocRef = doc(firestore, 'users', user.uid);
         await updateDoc(userDocRef, {
           billing: {
-            type: 'metamask',
+            type: 'coinbaseSmartWallet',
             walletAddress: walletAddress
           }
         });
@@ -114,13 +120,13 @@ const ConnectMetamask: React.FC = () => {
       {account ? (
         <div>
           <p>Connected: {account}</p>
-          <button onClick={disconnectWallet}>Disconnect Wallet</button>
+          <button onClick={disconnectWallet}>Disconnect Coinbase Smart Wallet</button>
         </div>
       ) : (
-        <button onClick={connectWallet}>Connect Metamask</button>
+        <button onClick={connectWallet}>Connect Coinbase Smart Wallet</button>
       )}
     </div>
   );
 };
 
-export default ConnectMetamask;
+export default ConnectBaseSmartWallet;
