@@ -1,22 +1,19 @@
 const hre = require("hardhat");
 
 async function main() {
-  const [deployer] = await hre.ethers.getSigners();
-  
-  console.log("Deploying contracts with the account:", deployer.address);
+  console.log("Deploying CertificateOfLien contract...");
 
-  console.log("Account balance:", (await deployer.getBalance()).toString());
+  const CertificateOfLien = await hre.ethers.getContractFactory("CertificateOfLien");
+  const certificateOfLien = await CertificateOfLien.deploy();
 
-  // Example contract deployment (replace 'PropertyToken' with your contract name)
-  const PropertyToken = await hre.ethers.getContractFactory("PropertyToken");
-  const propertyToken = await PropertyToken.deploy();
+  await certificateOfLien.waitForDeployment();
 
-  await propertyToken.deployed();
-
-  console.log("PropertyToken deployed to:", propertyToken.address);
+  console.log("CertificateOfLien deployed to:", await certificateOfLien.getAddress());
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
