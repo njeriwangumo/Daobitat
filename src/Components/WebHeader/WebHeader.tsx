@@ -1,5 +1,5 @@
-import React from "react";
-import "./WebHeader.css";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 export const WebHeader = () => {
     return (
@@ -7,7 +7,7 @@ export const WebHeader = () => {
             <div className="text-wrapper">Buy</div>
             <div className="div">Rent</div>
             <div className="text-wrapper-2">Sell</div>
-            <div className="text-wrapper-3">Advertise</div>
+            <Link to="/comingsoon" className="text-wrapper-3">Advertise</Link>
             <div className="text-wrapper-4">Sign In</div>
             <div className="text-wrapper-5">Daobitat</div>
         </div>

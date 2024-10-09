@@ -1,5 +1,7 @@
 import React from 'react';
 import ConnectWallet from './ConnectWallet';
+import ConnectBaseSmartWallet from './ConnectSmartWallet';
+import PaymentMethod from './PaymentMethod';
 
 
 interface BillingProps {
@@ -10,7 +12,9 @@ interface BillingProps {
 const Billings: React.FC<BillingProps> = () => {
   return (
     <div className="billingsdiv">
+      
         <ConnectWallet />
+        <ConnectBaseSmartWallet />
       
     </div>
   );

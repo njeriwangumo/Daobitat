@@ -9,7 +9,7 @@ import SignUp from './Components/SignUp/SignUp';
 import ListerDashboard from './Components/Dashboards/ListerDashboard';
 import BuyRentDashboard from './Components/Dashboards/BuyRentDashboard/BuyRentDashboard';
 import Billings from './Components/Dashboards/AddProperty/Billing/Billings';
-import PropertyForm4 from './Components/Dashboards/AddProperty/PropertyForm4';
+import ComingSoon from './Components/ComingSoon/ComingSoon';
 // import { FirebaseAuthProvider } from './FirebaseAuthContext';
 
 const App: React.FC = () => {
@@ -25,7 +25,7 @@ const App: React.FC = () => {
         <Route path="/listerdashboard" element={<ListerDashboard />} />
         <Route path="/buyrentdashboard" element={<BuyRentDashboard />} />
         <Route path="/billings" element={<Billings />} />
-        <Route path="/propertyf4" element={<PropertyForm4 />} />
+        <Route path="/comingsoon" element={<ComingSoon />} />
       </Routes>
     </Router>
     </UserProvider>
