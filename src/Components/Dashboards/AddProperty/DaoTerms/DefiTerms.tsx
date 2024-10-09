@@ -1,54 +1,53 @@
 import React from 'react';
 import './DefiTerms.css';
 import { useUser } from '../../../../contexts/UserContext';
-import { firestore } from '../../../../firebaseConfig'; // Adjust the path based on your project structure
+import { firestore } from '../../../../firebaseConfig';
 import { doc, updateDoc, setDoc } from 'firebase/firestore';
 
-const DefiTerms: React.FC<{ propertyId:string, onClose: () => void }> = ({propertyId, onClose }) => {
+interface DefiTermsProps {
+  propertyId: string;
+  onClose: () => void;
+  onConfirm: () => void;
+}
+
+const DefiTerms: React.FC<DefiTermsProps> = ({ propertyId, onClose, onConfirm }) => {
     const { user } = useUser();
     
-    const onConfirm = async () => {
+    const handleConfirm = async () => {
         try {
-            // Ensure user is authenticated
             if (!user || !user.uid) {
                 console.error("User is not authenticated");
                 return;
             }
     
-            // Reference to the specific defi terms
             const propertyRef = doc(firestore, `users/${user.uid}/properties/${propertyId}`);
     
-            // Update the daoenabled field to true
             await updateDoc(propertyRef, {
                 daoenabled: true
             });
     
-            // Reference to the "daoholders" collection within the property document
-            const daoHoldersRef = doc(firestore, `users/${user.uid}/properties/${propertyId}/daoholders/defaultHolder`); // 'defaultHolder' is a placeholder for the initial document name
+            const daoHoldersRef = doc(firestore, `users/${user.uid}/properties/${propertyId}/daoholders/defaultHolder`);
     
-            // Initialize the "daoholders" collection with an initial document
             await setDoc(daoHoldersRef, {
                 holderName: "Initial Holder",
                 createdAt: new Date(),
             });
     
             console.log("Property successfully updated with DAO enabled and 'daoholders' collection initialized.");
-            onClose(); // Close the popup after successful update
+            onConfirm(); // Call the onConfirm function passed from PropertyForm4
         } catch (error) {
             console.error("Error updating property or initializing 'daoholders' collection:", error);
         }
     };
-    
-
 
     return (
         <div className="popup-overlay">
             <div className="popup-content">
-                <h2>DAO-Bitat Tokenisation Terms and Conditions</h2>
-                <p>Welcome to DAO-Bitat! Before you tokenise your property on chain, please review the following terms and conditions. By proceeding with the listing, you agree to the following:</p>
+            <h2>DAO-Bitat Property Listing Terms and Conditions</h2>
+                <p>Welcome to DAO-Bitat! Before you list your property on our platform, please review the following terms and conditions. By proceeding with the listing, you agree to the following:</p>
                 
-                <h3>1. Asset will be put under lien and sale off chain can only happen after lien is lifted</h3>
-                <p><strong>Should you wish to temporarily lift the lien for offchain financing, the asset should not have any related or unsettled debt.</strong> Your property can only be removed from the platform by DAO-Bitat if it fails to meet our terms and conditions or listing standards.</p>
+                <h3>1. Irreversible Action</h3>
+                <p><strong>Once you confirm the listing of your property on DAO-Bitat, this action cannot be undone.</strong> Your property can only be removed from the platform by DAO-Bitat if it fails to meet our terms and conditions or listing standards.</p>
                 
                 <h3>2. Escrow Funds</h3>
                 <p><strong>All funds received from buyers will be held in escrow until the entire share of the property is purchased.</strong> This ensures that transactions are secure and that all parties are protected until the property ownership is fully transferred.</p>
@@ -83,10 +82,11 @@ const DefiTerms: React.FC<{ propertyId:string, onClose: () => void }> = ({proper
                 <p><strong>Your personal information and property details will be handled in accordance with DAO-Bitat’s privacy policy.</strong> We are committed to protecting your data and ensuring it is used only for the purposes of facilitating the property sale.</p>
                 
                 <p>By listing your property on DAO-Bitat, you acknowledge that you have read, understood, and agreed to these terms and conditions. If you have any questions or need further clarification, please contact our support team before proceeding.</p>
-
+            
+                
                 <div className="popup-buttons">
                     <button onClick={onClose}>Cancel</button>
-                    <button onClick={onConfirm}>Confirm</button>
+                    <button onClick={handleConfirm}>Confirm</button>
                 </div>
             </div>
         </div>

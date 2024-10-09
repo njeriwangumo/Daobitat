@@ -2,13 +2,19 @@ import React, { useState } from 'react';
 import './PropertyForm4.css';
 import DefiTerms from './DaoTerms/DefiTerms';
 
-const PropertyForm4: React.FC = () => {
+interface PropertyForm4Props {
+  prevStep: () => void;
+  handleCloseForm: () => void;
+  documentId: string; 
+}
+
+const PropertyForm4: React.FC<PropertyForm4Props> = ({ prevStep, handleCloseForm, documentId }) => {
   const [specificType, setSpecificType] = useState('');
   const [formData, setFormData] = useState({});
   const [showImagePopup, setShowImagePopup] = useState(false);
   const [images, setImages] = useState<File[]>([]);
   const [isAgreed, setIsAgreed] = useState(false); // State for checkbox
-  const [isDefiTermsVisible, setIsDefiTermsPopupVisible] = useState(false);
+  const [isDefiTermsVisible, setIsDefiTermsVisible] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -24,6 +30,7 @@ const PropertyForm4: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    handleCloseForm();
     // Submission logic here
   };
 
@@ -40,12 +47,12 @@ const PropertyForm4: React.FC = () => {
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setIsAgreed(e.target.checked);
   };
-  const handleDefiTermsButtonClick = () => {
-    setIsDefiTermsPopupVisible(true);
+  const DefiTermsOpen = () => {
+    setIsDefiTermsVisible(true);
   };
 
-  const handleCloseDefiTermsPopup = () => {
-    setIsDefiTermsPopupVisible(false);
+  const DefiTermsClose = () => {
+    setIsDefiTermsVisible(false);
   };
 
   return (
@@ -104,14 +111,23 @@ const PropertyForm4: React.FC = () => {
             />
             
             I am ready to abide to the terms and conditions
-            <button type="submit">Read Terms and conditions**
-        <p onClick={handleDefiTermsButtonClick}></p>
-        </button>
+            
+        <p onClick={DefiTermsOpen}>Read Terms and conditions**</p>
+        
           </label>
         </div>
-
+        <button type="button" onClick={prevStep}>Back</button>
         <button type="submit">Upload</button>
-      </form>\
+      </form>
+
+      
+      {isDefiTermsVisible && (
+        <DefiTerms
+          propertyId={documentId}
+          onClose={DefiTermsClose}
+          onConfirm={DefiTermsClose}
+        />
+      )}
       
     </div>
   );

@@ -14,9 +14,18 @@ interface PropertyForm3Props {
   propertyAction: string; 
   documentId: string | null; 
   handleCloseForm: () => void;
+  handleListOnChain: () => void;
+  handleSubmitForm3: () => void;
 }
 
-const PropertyForm3: React.FC<PropertyForm3Props> = ({ prevStep, propertyType, propertyAction, documentId, handleCloseForm }) => { // Include propertyAction in destructuring
+const PropertyForm3: React.FC<PropertyForm3Props> = ({ 
+            prevStep,
+            propertyType,
+            propertyAction,
+            documentId,
+            handleCloseForm,
+            handleListOnChain,
+            handleSubmitForm3 }) => {
   const { user } = useUser();
   const navigate = useNavigate();
   const [specificType, setSpecificType] = useState('');
@@ -439,6 +448,7 @@ const PropertyForm3: React.FC<PropertyForm3Props> = ({ prevStep, propertyType, p
 
         <button type="button" onClick={prevStep}>Back</button>
         <button type="submit" >Submit</button>
+        <button type="button" onClick={handleListOnChain}>List on Chain</button>
       </form>
     </div>
   );
