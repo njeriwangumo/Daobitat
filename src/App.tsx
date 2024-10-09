@@ -14,6 +14,8 @@ import CreateLienForm from './Components/Financing/CreateLien';
 // import { FirebaseAuthProvider } from './FirebaseAuthContext';
 
 const App: React.FC = () => {
+
+  
   return (
     <UserProvider>
     <Router>
@@ -30,6 +32,7 @@ const App: React.FC = () => {
     </Router>
     </UserProvider>
   );
+  
 };
 
 export default App;
