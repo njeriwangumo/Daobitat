@@ -1,0 +1,121 @@
+:root {
+    --bg-color: #1a1a2e;
+    --text-color: #e0e0e0;
+    --input-bg: #16213e;
+    --accent-color: #0f3460;
+    --button-color: #1e5f74;
+    --hover-color: #2d82a1;
+    --border-color: #374151;
+    --success-color: #4caf50;
+    --error-color: #f44336;
+  }
+  
+  body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Arial', sans-serif;
+  }
+  
+  .create-lien-component {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: rgba(26, 26, 46, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+  
+  .title {
+    text-align: center;
+    color: var(--text-color);
+    font-size: 24px;
+    margin-bottom: 30px;
+  }
+  
+  .lien-info {
+    background-color: var(--input-bg);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  
+  .label {
+    color: var(--text-color);
+    opacity: 0.7;
+  }
+  
+  .value {
+    font-weight: bold;
+  }
+  
+  .input-group {
+    margin-bottom: 25px;
+  }
+  
+  .input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-color);
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-color);
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .input-group input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+  }
+  
+  .submit-button {
+    width: 100%;
+    padding: 14px;
+    background-color: var(--button-color);
+    color: var(--text-color);
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: var(--hover-color);
+  }
+  
+  .error, .success {
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+  }
+  
+  .error {
+    background-color: rgba(244, 67, 54, 0.1);
+    color: var(--error-color);
+  }
+  
+  .success {
+    background-color: rgba(76, 175, 80, 0.1);
+    color: var(--success-color);
+  }
+  
+  .loading {
+    text-align: center;
+    color: var(--text-color);
+    font-size: 18px;
+    margin-top: 40px;
+  }
