@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import ConnectWallet from './ConnectWallet';
 import ConnectBaseSmartWallet from './ConnectSmartWallet';
 import PageInConstruction from '../../../InConstruction/PageInconstruction';
+import './PaymentMethod.css';
 
 interface PayProps {}
 
@@ -30,7 +31,7 @@ const PaymentMethod: React.FC<PayProps> = () => {
           Mastercard
         </button>
         <ConnectWallet />
-        <ConnectBaseSmartWallet />
+        <ConnectBaseSmartWallet  />
       </div>
       {showPopup && <PageInConstruction onClose={closePopup} />}
     </div>
