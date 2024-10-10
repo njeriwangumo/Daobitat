@@ -11,6 +11,7 @@ import BuyRentDashboard from './Components/Dashboards/BuyRentDashboard/BuyRentDa
 import Billings from './Components/Dashboards/AddProperty/Billing/Billings';
 import ComingSoon from './Components/ComingSoon/ComingSoon';
 import CreateLienForm from './Components/Financing/CreateLien';
+import PaymentMethod from './Components/Dashboards/AddProperty/Billing/PaymentMethod';
 // import { FirebaseAuthProvider } from './FirebaseAuthContext';
 
 const App: React.FC = () => {
@@ -28,6 +29,7 @@ const App: React.FC = () => {
         <Route path="/billings" element={<Billings />} />
         <Route path="/comingsoon" element={<ComingSoon />} />
         <Route path="/create-lien" element={<CreateLienForm />} />
+        <Route path="/paymentmethod" element={<PaymentMethod/>} />
       </Routes>
     </Router>
     </UserProvider>

@@ -6,6 +6,7 @@ import Properties from './AddProperty/Properties';
 import Billings from './AddProperty/Billing/Billings';
 import Messages from './Messages';
 import { useNavigate } from 'react-router-dom';
+import FinancingDashboard from '../Financing/Financing';
 import './ListerDashboard.css';
 
 const ListerDashboard: React.FC = () => {
@@ -39,6 +40,8 @@ const ListerDashboard: React.FC = () => {
         return <Messages />;
       case 'Billings':
         return <Billings />;
+      case 'Financing':
+        return <FinancingDashboard />;
       default:
         return <Properties />;
     }
@@ -60,7 +63,8 @@ const ListerDashboard: React.FC = () => {
           <li className={activeTab === 'AccountInfo' ? 'active' : ''} onClick={() => setActiveTab('AccountInfo')}>Profile</li>
           <li className={activeTab === 'Properties' ? 'active' : ''} onClick={() => setActiveTab('Properties')}>Properties</li>
           <li className={activeTab === 'Messages' ? 'active' : ''} onClick={() => setActiveTab('Messages')}>Messages</li>
-          <li className={activeTab === 'Messages' ? 'active' : ''} onClick={() => setActiveTab('Billings')}>Billing</li>
+          <li className={activeTab === 'Billings' ? 'active' : ''} onClick={() => setActiveTab('Billings')}>Billing</li>
+          <li className={activeTab === 'Financing' ? 'active' : ''} onClick={() => setActiveTab('Financing')}>Financing</li>
           <li onClick={handleSignOut}>Sign Out</li>
         </ul>
       </nav>
