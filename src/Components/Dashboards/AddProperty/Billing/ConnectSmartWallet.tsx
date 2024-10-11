@@ -3,6 +3,7 @@ import CoinbaseWalletSDK from '@coinbase/wallet-sdk';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { useUser } from '../../../../contexts/UserContext';
 import { firestore } from '../../../../firebaseConfig';
+import './ConnectWallet.css';
 
 const ConnectBaseSmartWallet: React.FC = () => {
   const { user } = useUser();
@@ -123,7 +124,12 @@ const ConnectBaseSmartWallet: React.FC = () => {
           <button onClick={disconnectWallet}>Disconnect Coinbase Smart Wallet</button>
         </div>
       ) : (
-        <button onClick={connectWallet}>Connect Coinbase Smart Wallet</button>
+        
+        <div onClick={connectWallet} className='walletdiv'>
+          <img  
+          className ='walletlogo'
+          src='https://cdn.iconscout.com/icon/free/png-256/free-coinbase-logo-icon-download-in-svg-png-gif-file-formats--bitcoin-cryptocurrency-blockchain-currency-social-media-company-logos-pack-icons-6297189.png'></img> 
+          <p>Smart Wallet</p></div>
       )}
     </div>
   );
