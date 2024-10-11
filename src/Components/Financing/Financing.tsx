@@ -1,111 +1,84 @@
 import React from 'react';
+import { CSSProperties } from 'react';
 
+
+const customStyles: CSSProperties = {
+  ['--select-button-svg' as string]: "url('data:image/svg+xml...",
+  fontFamily: '"Public Sans", "Noto Sans", sans-serif'
+};
 const FinancingDashboard: React.FC = () => {
-  // Dummy data
-  const properties = [
-    { id: 1, address: "123 Main St", status: "Approved", offers: 2 },
-    { id: 2, address: "456 Elm St", status: "Pending", offers: 0 },
-    { id: 3, address: "789 Oak St", status: "Rejected", offers: 0 },
-  ];
-
-  const loans = [
-    { id: 1, amount: 100000, paid: 25000, status: "Active" },
-    { id: 2, amount: 75000, paid: 75000, status: "Paid" },
-    { id: 3, amount: 50000, paid: 10000, status: "Active" },
-  ];
-
-  const earnings = {
-    daoProjects: 5000,
-    previousProjects: 15000,
-  };
-
   return (
-    <div className="container">
-      <h1 className="title">Financing Dashboard</h1>
-
-      <div className="dashboard-grid">
-        <div className="card">
-          <h2>Quick Actions</h2>
-          <div className="button-group">
-            <button className="btn">View All Transactions</button>
-            <button className="btn">Offer to Lend</button>
-            <button className="btn">Bring Property On-Chain</button>
+    <div
+      className="relative flex size-full min-h-screen flex-col bg-[#181114] dark group/design-root overflow-x-hidden"
+      style={customStyles}
+    >
+      <div className="layout-container flex h-full grow flex-col">
+        <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#382932] px-10 py-3">
+          <div className="flex items-center gap-4 text-white">
+            <div className="size-4">
+              
+            </div>
+          
           </div>
-        </div>
-
-        <div className="card">
-          <h2>Earnings Overview</h2>
-          <p>DAO Projects: ${earnings.daoProjects}</p>
-          <p>Previous Projects: ${earnings.previousProjects}</p>
-          <p className="total">Total: ${earnings.daoProjects + earnings.previousProjects}</p>
-        </div>
-      </div>
-
-      <div className="tabs">
-        <button className="tab-btn active">Properties</button>
-        <button className="tab-btn">Loans</button>
-      </div>
-
-      <div className="tab-content">
-        <div className="card">
-          <h2>Your Properties</h2>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Address</th>
-                <th>Status</th>
-                <th>Offers</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {properties.map((property) => (
-                <tr key={property.id}>
-                  <td>{property.address}</td>
-                  <td>{property.status}</td>
-                  <td>{property.offers}</td>
-                  <td>
-                    <button className="btn-small">View Details</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="card" style={{display: 'none'}}>
-          <h2>Your Loans</h2>
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Amount</th>
-                <th>Paid</th>
-                <th>Status</th>
-                <th>Progress</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loans.map((loan) => (
-                <tr key={loan.id}>
-                  <td>${loan.amount}</td>
-                  <td>${loan.paid}</td>
-                  <td>{loan.status}</td>
-                  <td>
-                    <div className="progress-bar">
-                      <div 
-                        className="progress" 
-                        style={{width: `${(loan.paid / loan.amount) * 100}%`}}
-                      ></div>
-                    </div>
-                  </td>
-                  <td>
-                    <button className="btn-small">Make Payment</button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <div className="flex flex-1 justify-end gap-8">
+            <div className="flex items-center gap-9">
+  
+              <a className="text-white text-sm font-medium leading-normal" href="#">Borrow</a>
+              <a className="text-white text-sm font-medium leading-normal" href="#">Lend</a>
+              <a className="text-white text-sm font-medium leading-normal" href="#">Approved requests</a>
+              <a className="text-white text-sm font-medium leading-normal" href="#">Pending requests</a>
+              <a className="text-white text-sm font-medium leading-normal" href="#">Statement</a>
+            </div>
+            <button
+              className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 bg-[#5f133e] text-white text-sm font-bold leading-normal tracking-[0.015em]"
+            >
+              <span className="truncate">Connect Wallet</span>
+            </button>
+            <div
+              className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
+              style={{
+                backgroundImage: 'url("https://cdn.usegalileo.ai/sdxl10/d95cea0c-2957-448a-8f02-103cef67ce22.png")'
+              }}
+            ></div>
+          </div>
+        </header>
+        <div className="px-40 flex flex-1 justify-center py-5">
+          <div className="layout-content-container flex flex-col w-[512px] max-w-[512px] py-5 flex-1">
+            <h2 className="text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 text-center pb-2 pt-4">
+            Unlock the full potential of your local assets for global financial freedom
+            </h2>
+            <h2 className="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Loan details</h2>
+            <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+              <label className="flex flex-col min-w-40 flex-1">
+                <input
+                  placeholder="Loan amount"
+                  className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border border-[#533c47] bg-[#261c21] focus:border-[#533c47] h-14 placeholder:text-[#b89dab] p-[15px] text-base font-normal leading-normal"
+                />
+              </label>
+            </div>
+            <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+              <label className="flex flex-col min-w-40 flex-1">
+                <select
+                  className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border border-[#533c47] bg-[#261c21] focus:border-[#533c47] h-14 bg-[image:var(--select-button-svg)] placeholder:text-[#b89dab] p-[15px] text-base font-normal leading-normal"
+                >
+                  <option value="one">Interest rate</option>
+                  <option value="two">two</option>
+                  <option value="three">three</option>
+                </select>
+              </label>
+            </div>
+            <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
+              <label className="flex flex-col min-w-40 flex-1">
+                <select
+                  className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border border-[#533c47] bg-[#261c21] focus:border-[#533c47] h-14 bg-[image:var(--select-button-svg)] placeholder:text-[#b89dab] p-[15px] text-base font-normal leading-normal"
+                >
+                  <option value="one">Repayment period</option>
+                  <option value="two">two</option>
+                  <option value="three">three</option>
+                </select>
+              </label>
+            </div>
+          </div>
         </div>
       </div>
     </div>
