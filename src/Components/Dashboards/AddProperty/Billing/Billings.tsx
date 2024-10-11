@@ -13,7 +13,7 @@ const Billings: React.FC<BillingProps> = () => {
   return (
     <div className="billingsdiv">
       
-        <ConnectYourWallet />
+    
       
     </div>
   );
