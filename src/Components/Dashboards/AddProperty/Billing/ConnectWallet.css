@@ -33,7 +33,7 @@
 .parentwallet {
     display: flex;
     flex-direction: column;
-    width: 40%;
+    width: 100%;
     background-color: #181114;
     padding: 20px;
     align-items: center;
