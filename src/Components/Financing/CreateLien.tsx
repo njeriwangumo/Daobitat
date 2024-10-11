@@ -13,7 +13,11 @@ interface LienData {
   propertyId: string;
 }
 
-const CreateLienComponent: React.FC = () => {
+interface CreateLienProps {
+  onClose: () => void;
+}
+
+const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose }) => {
   const [lienData, setLienData] = useState<LienData | null>(null);
   const [loanPeriod, setLoanPeriod] = useState('');
   const [interestRate, setInterestRate] = useState('');
