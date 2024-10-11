@@ -13,9 +13,7 @@ const LoanDetails: React.FC = () => {
         
         <div className="px-40 flex flex-1 justify-center py-5">
           <div className="layout-content-container flex flex-col w-[512px] max-w-[512px] py-5 flex-1">
-            <h2 className="text-white text-lg font-bold leading-tight tracking-[-0.015em] px-4 text-center pb-2 pt-4">
-            Unlock the full potential of your local assets for global financial freedom
-            </h2>
+          
             <h2 className="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Loan details</h2>
             <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
               <label className="flex flex-col min-w-40 flex-1">
