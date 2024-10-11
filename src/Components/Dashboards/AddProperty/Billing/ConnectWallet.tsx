@@ -4,6 +4,7 @@ import { BrowserProvider, Signer } from 'ethers';
 import { doc, updateDoc, getDoc } from 'firebase/firestore';
 import { useUser } from '../../../../contexts/UserContext';
 import { firestore } from '../../../../firebaseConfig';
+import './ConnectWallet.css';
 
 const ConnectMetamask: React.FC = () => {
   const { user } = useUser();
@@ -114,10 +115,12 @@ const ConnectMetamask: React.FC = () => {
       {account ? (
         <div>
           <p>Connected: {account}</p>
-          <button onClick={disconnectWallet}>Disconnect Wallet</button>
+          <button onClick={disconnectWallet}>Disconnect Metamask</button>
         </div>
       ) : (
-        <button onClick={connectWallet}>Connect Metamask</button>
+        <div onClick={connectWallet} className='walletdiv'>
+          <img  className ='walletlogo' src='https://cdn.iconscout.com/icon/free/png-128/free-metamask-logo-icon-download-in-svg-png-gif-file-formats--browser-extension-chrome-logos-icons-2261817.png?f=webp'></img> 
+          <p>Metamask</p></div>
       )}
     </div>
   );
