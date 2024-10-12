@@ -107,6 +107,8 @@ const LoanDetails: React.FC = () => {
             <label className="flex flex-col min-w-40 flex-1">
               <input
                 placeholder="Interest rate"
+                value={interestRate}
+                onChange={(e) => setInterestRate(e.target.value)}
                 className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border border-[#533c47] bg-[#261c21] focus:border-[#533c47] h-14 placeholder:text-[#b89dab] p-[15px] text-base font-normal leading-normal"
               />
             </label>
@@ -117,6 +119,8 @@ const LoanDetails: React.FC = () => {
             <label className="flex flex-col min-w-40 flex-1">
               <input
                 placeholder="Repayment period"
+                value={repaymentPeriod}
+                onChange={(e) => setRepaymentPeriod(e.target.value)}
                 className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border border-[#533c47] bg-[#261c21] focus:border-[#533c47] h-14 placeholder:text-[#b89dab] p-[15px] text-base font-normal leading-normal"
               />
             </label>
@@ -143,7 +147,9 @@ const LoanDetails: React.FC = () => {
 
           {/* Submit button */}
           <div className="flex justify-center pt-4">
-            <button className="bg-[#533c47] text-white rounded-xl px-6 py-3 font-medium text-base hover:bg-[#3b2934] focus:outline-none focus:ring-2 focus:ring-[#b89dab]">
+            <button 
+            onClick={handleSubmit}
+            className="bg-[#533c47] text-white rounded-xl px-6 py-3 font-medium text-base hover:bg-[#3b2934] focus:outline-none focus:ring-2 focus:ring-[#b89dab]">
               Submit
             </button>
           </div>
