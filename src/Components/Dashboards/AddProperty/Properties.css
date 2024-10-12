@@ -44,7 +44,19 @@
     position: absolute;
     top: 10px;
     right: 10px;
-    background: none;
+    background-color: rgba(183, 227, 204,0.1);
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    width:45px;
+    height:45px;
+  }
+
+  .close-button:hover {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #B7E3CC;
     border: none;
     font-size: 24px;
     cursor: pointer;

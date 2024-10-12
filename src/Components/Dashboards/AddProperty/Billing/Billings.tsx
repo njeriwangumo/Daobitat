@@ -12,6 +12,8 @@ interface BillingProps {
 const Billings: React.FC<BillingProps> = () => {
   return (
     <div className="billingsdiv">
+
+      Invoices
       
     
       

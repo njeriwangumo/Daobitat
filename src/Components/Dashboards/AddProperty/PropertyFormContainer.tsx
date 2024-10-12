@@ -34,7 +34,7 @@ const PropertyFormContainer: React.FC<PropertyFormContainerProps> = ({ handleClo
   };
 
   const handleSubmitForm3 = () => {
-    // Logic to submit form 3
+   
     handleCloseForm();
   };
 
