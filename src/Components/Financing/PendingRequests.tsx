@@ -3,6 +3,7 @@ import { CSSProperties } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { firestore } from '../../firebaseConfig';
 import { useUser } from '../../contexts/UserContext';
+import { Timestamp } from 'firebase/firestore';
 
 const customStyles: CSSProperties = {
   ['--select-button-svg' as string]: "url('data:image/svg+xml...",
@@ -15,7 +16,7 @@ interface LoanRequest {
   loanAmount: string;
   interestRate: string;
   repaymentPeriod: string;
-  timestamp: Date;
+  timestamp: Timestamp;
 }
 
 const PendingRequests: React.FC = () => {

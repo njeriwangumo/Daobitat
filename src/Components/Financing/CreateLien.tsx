@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ethers } from 'ethers';
 import './CreateLien.css';
 
@@ -8,42 +8,21 @@ const CONTRACT_ABI = [
   "event LienCreated(uint256 indexed tokenId, address indexed borrower, uint256 landPrice, uint256 period, uint256 interestRate)"
 ];
 
-interface LienData {
-  landPrice: string;
-  propertyId: string;
-}
-
 interface CreateLienProps {
   onClose: () => void;
+  propertyId: string;
+  loanAmount: string;
+  landPrice: string;
 }
 
-const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose }) => {
-  const [lienData, setLienData] = useState<LienData | null>(null);
+const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, loanAmount, landPrice }) => {
   const [loanPeriod, setLoanPeriod] = useState('');
   const [interestRate, setInterestRate] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  useEffect(() => {
-    // Simulating fetching data from backend
-    const fetchLienData = async () => {
-      // Replace this with actual API call
-      const mockData: LienData = {
-        landPrice: '0.0001',
-        propertyId: 'PROP123'
-      };
-      setLienData(mockData);
-    };
-
-    fetchLienData();
-  }, []);
-
   const handleCreateLien = async () => {
     try {
-      if (!lienData) {
-        throw new Error("Lien data not available");
-      }
-  
       if (!window.ethereum) {
         throw new Error("Please install MetaMask!");
       }
@@ -93,7 +72,7 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose }) => {
       const balance = await provider.getBalance(await signer.getAddress());
       console.log("Account balance:", ethers.formatEther(balance), "ETH");
 
-      const landPriceWei = ethers.parseEther(lienData!.landPrice);
+      const landPriceWei = ethers.parseEther(landPrice);
       const periodInSeconds = BigInt(parseInt(loanPeriod) * 24 * 60 * 60); // Convert days to seconds
       const interestRateScaled = BigInt(Math.floor(parseFloat(interestRate) * 100)); // Scale up by 100 for precision
 
@@ -111,14 +90,14 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose }) => {
       // Parse the logs to find the LienCreated event
       const interfacer = new ethers.Interface(CONTRACT_ABI);
       const lienCreatedEvent = receipt.logs
-        .map((log: ethers.Log) => {
+        .map((log: any) => {
           try {
             return interfacer.parseLog(log);
           } catch {
             return null;
           }
         })
-        .find((event: ethers.LogDescription | null) => event?.name === 'LienCreated');
+        .find((event: any) => event?.name === 'LienCreated');
 
       if (lienCreatedEvent && lienCreatedEvent.args) {
         const tokenId = lienCreatedEvent.args[0];
@@ -133,21 +112,21 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose }) => {
     }
   };
 
-  if (!lienData) {
-    return <div className="loading">Loading lien data...</div>;
-  }
-
   return (
     <div className="create-lien-component">
       <h2 className="title">Create Lien</h2>
       <div className="lien-info">
         <div className="info-item">
-          <span className="label">Land Price:</span>
-          <span className="value">{lienData.landPrice} ETH</span>
+          <span className="label">Property ID:</span>
+          <span className="value">{propertyId}</span>
         </div>
         <div className="info-item">
-          <span className="label">Property ID:</span>
-          <span className="value">{lienData.propertyId}</span>
+          <span className="label">Loan Amount:</span>
+          <span className="value">{loanAmount} ETH</span>
+        </div>
+        <div className="info-item">
+          <span className="label">Land Price:</span>
+          <span className="value">{landPrice} ETH</span>
         </div>
       </div>
       <div className="input-group">
