@@ -56,6 +56,10 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
                 },
               ],
             });
+
+            setTimeout(() => {
+              onClose();
+            }, 1000);
           } catch (addError) {
             throw new Error("Failed to add Base Sepolia network to MetaMask");
           }
@@ -156,6 +160,10 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
       </div>
       <button onClick={handleCreateLien} className="submit-button">
         Submit to Marketplace for Financing
+      </button>
+
+      <button onClick={onClose} className="cancel-button">
+        Cancel
       </button>
       {error && <div className="error">{error}</div>}
       {success && <div className="success">{success}</div>}

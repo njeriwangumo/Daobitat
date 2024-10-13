@@ -85,7 +85,7 @@ const ApprovedRequests: React.FC = () => {
 
                   {isCreateLienOpen && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                      <div className="bg-white p-4 rounded-lg">
+                      <div className="bg-[#533c47] p-1 rounded-lg">
                       <CreateLienComponent 
                   onClose={closeCreateLien}
                   propertyId={request.propertyId}

@@ -54,24 +54,24 @@ const ListerDashboard: React.FC = () => {
 
   return (
     <div className="dashboard">
-      <nav className="dashboard-nav">
-        <div className="dashboard-user">
-          <span>Hi, {user.name || 'User'}</span>
-        </div>
-        <ul className="dashboard-menu">
-          <li onClick={goHome}>Home</li>
-          <li className={activeTab === 'AccountInfo' ? 'active' : ''} onClick={() => setActiveTab('AccountInfo')}>Profile</li>
-          <li className={activeTab === 'Properties' ? 'active' : ''} onClick={() => setActiveTab('Properties')}>Properties</li>
-          <li className={activeTab === 'Messages' ? 'active' : ''} onClick={() => setActiveTab('Messages')}>Messages</li>
-          <li className={activeTab === 'Billings' ? 'active' : ''} onClick={() => setActiveTab('Billings')}>Billing</li>
-          <li className={activeTab === 'Financing' ? 'active' : ''} onClick={() => setActiveTab('Financing')}>Financing</li>
-          <li onClick={handleSignOut}>Sign Out</li>
-        </ul>
-      </nav>
-      <div className="dashboard-content">
-        {renderContent()}
+    <nav className="dashboard-nav">
+      <div className="dashboard-user">
+        <span>Hi, {user.name || 'User'}</span>
       </div>
+      <ul className="dashboard-menu">
+        <li onClick={goHome}>Home</li>
+        <li className={activeTab === 'AccountInfo' ? 'active' : ''} onClick={() => setActiveTab('AccountInfo')}>Profile</li>
+        <li className={activeTab === 'Properties' ? 'active' : ''} onClick={() => setActiveTab('Properties')}>Properties</li>
+        <li className={activeTab === 'Messages' ? 'active' : ''} onClick={() => setActiveTab('Messages')}>Messages</li>
+        <li className={activeTab === 'Billings' ? 'active' : ''} onClick={() => setActiveTab('Billings')}>Billing</li>
+        <li className={activeTab === 'Financing' ? 'active' : ''} onClick={() => setActiveTab('Financing')}>Financing</li>
+        <li onClick={handleSignOut}>Sign Out</li>
+      </ul>
+    </nav>
+    <div className="dashboard-content">
+      {renderContent()}
     </div>
+  </div>
   );
 };
 
