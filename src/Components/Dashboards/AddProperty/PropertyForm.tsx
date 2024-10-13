@@ -73,7 +73,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ nextStep, onLocationChange,
 
   return (
     <div className="property-form">
-      <h2>First, let's add your property</h2>
+      <h2>Add Your Property</h2>
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="propertyName">Property Name (optional)</label>
@@ -83,15 +83,14 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ nextStep, onLocationChange,
             name="propertyName"
             value={propertyData.propertyName}
             onChange={handleChange}
+            placeholder="Enter property name"
           />
         </div>
         <div className="form-group">
           <label htmlFor="location">Location</label>
           <PlacesAutocomplete
             value={propertyData.location}
-            onChange={(value) =>
-              setPropertyData((prevState) => ({ ...prevState, location: value }))
-            }
+            onChange={(value) => setPropertyData((prevState) => ({ ...prevState, location: value }))}
             onSelect={handleSelect}
           >
             {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
@@ -109,15 +108,11 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ nextStep, onLocationChange,
                     const className = customSuggestion.active
                       ? 'suggestion-item--active'
                       : 'suggestion-item';
-                    const style = customSuggestion.active
-                      ? { backgroundColor: '#fafafa', cursor: 'pointer' }
-                      : { backgroundColor: '#ffffff', cursor: 'pointer' };
                     return (
                       <div
                         key={customSuggestion.placeId}
                         {...getSuggestionItemProps(customSuggestion, {
                           className,
-                          style,
                         })}
                       >
                         <span>{customSuggestion.description}</span>
@@ -137,9 +132,9 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ nextStep, onLocationChange,
             name="streetAddress"
             value={propertyData.streetAddress}
             onChange={handleChange}
+            placeholder="Enter street address"
           />
         </div>
-        
         <div className="form-group">
           <label htmlFor="propertyType">Property Type</label>
           <select
@@ -157,7 +152,6 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ nextStep, onLocationChange,
             <option value="Vacation/Short-term rentals">Vacation/Short-term rentals</option>
           </select>
         </div>
-        
         <div className="form-group">
           <label htmlFor="unitNo">Unit No. (if applicable)</label>
           <input
@@ -166,6 +160,7 @@ const PropertyForm: React.FC<PropertyFormProps> = ({ nextStep, onLocationChange,
             name="unitNo"
             value={propertyData.unitNo}
             onChange={handleChange}
+            placeholder="Enter unit number"
           />
         </div>
         <button type="submit">Next</button>
