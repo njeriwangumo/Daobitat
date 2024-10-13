@@ -1,72 +1,103 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-const loanData = [
-  { id: 1, title: 'User 1', columnA: '$15,000', columnB: '3 Years' },
-  { id: 2, title: 'User 2', columnA: '$25,000', columnB: '5 Years' },
-  { id: 3, title: 'User 3', columnA: '$10,000', columnB: '2 Years' },
-  { id: 4, title: 'User 4', columnA: '$20,000', columnB: '10 Years' },
-  { id: 5, title: 'User 5', columnA: '$50,000', columnB: '7 Years' },
-  { id: 6, title: 'Medical Expense Loan', columnA: '$5,000', columnB: '1 Year' },
-  { id: 7, title: 'Vacation Loan', columnA: '$12,000', columnB: '3 Years' },
-  { id: 8, title: 'Debt Consolidation Loan', columnA: '$30,000', columnB: '4 Years' },
-  { id: 9, title: 'Green Energy Loan', columnA: '$40,000', columnB: '15 Years' },
-  { id: 10, title: 'Wedding Loan', columnA: '$8,000', columnB: '2 Years' },
-  { id: 11, title: 'Equipment Purchase Loan', columnA: '$35,000', columnB: '5 Years' },
-  { id: 12, title: 'Investment Loan', columnA: '$60,000', columnB: '8 Years' },
-  { id: 13, title: 'Refinancing Loan', columnA: '$45,000', columnB: '6 Years' },
-  { id: 14, title: 'Property Improvement Loan', columnA: '$18,000', columnB: '4 Years' },
-  { id: 15, title: 'Startup Loan', columnA: '$70,000', columnB: '10 Years' },
-];
+// Boilerplate components (you would replace these with actual implementations)
+const ProgressBar: React.FC = () => <div>Progress Bar Component</div>;
+const LoanCard: React.FC = () => <div>Loan Card Component</div>;
 
-const LoanDetails: React.FC = () => {
+// Replace with the actual UI components when available
+const Slider: React.FC<{ value: number[]; onValueChange: (value: number[]) => void }> = ({ value, onValueChange }) => (
+  <input
+    type="range"
+    value={value[0]}
+    onChange={(e) => onValueChange([+e.target.value])}
+    min={0}
+    max={10000}
+    step={100}
+  />
+);
+
+const Calendar: React.FC<{ selected?: Date; onSelect: (date: Date | undefined) => void }> = ({ selected, onSelect }) => (
+  <input
+    type="date"
+    value={selected ? selected.toISOString().substring(0, 10) : ''}
+    onChange={(e) => onSelect(e.target.value ? new Date(e.target.value) : undefined)}
+  />
+);
+
+const Select: React.FC<{ value: string; onValueChange: (value: string) => void }> = ({ value, onValueChange }) => (
+  <select value={value} onChange={(e) => onValueChange(e.target.value)}>
+    <option value="balance">Balance</option>
+    <option value="repaymentDate">Repayment Date</option>
+  </select>
+);
+
+const LendDetails: React.FC = () => {
+  const [balanceFilter, setBalanceFilter] = useState<number>(0);
+  const [repaymentDateFilter, setRepaymentDateFilter] = useState<Date | undefined>(undefined);
+  const [applicationDateFilter, setApplicationDateFilter] = useState<Date | undefined>(undefined);
+  const [sortBy, setSortBy] = useState<string>('balance');
+
+  // Sample loan data (you would replace this with real data)
+  const loans = [
+    {
+      id: 1,
+      loanName: 'Consumer Loan',
+      balanceAmount: 1000.00,
+      payed: 100.00,
+      nextPayment: 80.00,
+      nextPaymentDate: new Date('2024-07-17'),
+      applicationDate: new Date('2023-03-17'),
+    },
+    // Add more loans as needed...
+  ];
+
+  // Filter and sort loans
+  const filteredLoans = loans
+    .filter((loan) => loan.balanceAmount >= balanceFilter)
+    .filter((loan) => !repaymentDateFilter || loan.nextPaymentDate >= repaymentDateFilter)
+    .filter((loan) => !applicationDateFilter || loan.applicationDate >= applicationDateFilter)
+    .sort((a, b) => (sortBy === 'balance' ? b.balanceAmount - a.balanceAmount : a.nextPaymentDate.getTime() - b.nextPaymentDate.getTime()));
+
   return (
-    <div
-      className="relative flex size-full min-h-screen flex-col bg-[#181114] dark group/design-root overflow-x-hidden"
-      style={{ fontFamily: '"Public Sans", "Noto Sans", sans-serif' }}
-    >
-      <div className="layout-container flex h-full grow flex-col">
-        <header className="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#382930] px-10 py-3">
-          <button className="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-[#382930] text-white gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
-            <div className="text-white">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
-                <path d="M221.8,175.94C216.25,166.38,208,139.33,208,104a80,80,0,1,0-160,0c0,35.34-8.26,62.38-13.81,71.94A16,16,0,0,0,48,200H88.81a40,40,0,0,0,78.38,0H208a16,16,0,0,0,13.8-24.06ZM128,216a24,24,0,0,1-22.62-16h45.24A24,24,0,0,1,128,216ZM48,184c7.7-13.24,16-43.92,16-80a64,64,0,1,1,128,0c0,36.05,8.28,66.73,16,80Z"></path>
-              </svg>
-            </div>
-          </button>
-          {/* Additional buttons can be added here */}
-        </header>
+    <div className="relative flex size-full min-h-screen flex-col bg-[#181114] dark group/design-root overflow-x-hidden p-6">
+      <h1 className="text-white text-2xl font-bold mb-6">Loan Dashboard</h1>
+
+      {/* Progress bar section */}
+      <div className="mb-8">
+        <h2 className="text-white text-lg font-bold mb-4">Billing Progress</h2>
+        <ProgressBar />
       </div>
 
-      <div>
-        <table>
-          <thead>
-            <tr>
-              <th>Loan Title</th>
-              <th className="table-23738f56-7fb3-4d5d-80a5-14a2bcaf059e-column-56">Column A</th>
-              <th className="table-23738f56-7fb3-4d5d-80a5-14a2bcaf059e-column-176">Column B</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loanData.map((loan) => (
-              <tr key={loan.id}>
-                <td>{loan.title}</td>
-                <td className="table-23738f56-7fb3-4d5d-80a5-14a2bcaf059e-column-56">{loan.columnA}</td>
-                <td className="table-23738f56-7fb3-4d5d-80a5-14a2bcaf059e-column-176">{loan.columnB}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Filter section */}
+      <div className="mb-8 space-y-4">
+        <h2 className="text-white text-lg font-bold">Filters</h2>
+        <div className="flex items-center space-x-4">
+          <label className="text-white">Balance:</label>
+          <Slider value={[balanceFilter]} onValueChange={(value) => setBalanceFilter(value[0])} />
+          <span className="text-white">${balanceFilter}</span>
+        </div>
+        <div className="flex items-center space-x-4">
+          <label className="text-white">Repayment Date:</label>
+          <Calendar selected={repaymentDateFilter} onSelect={setRepaymentDateFilter} />
+        </div>
+        <div className="flex items-center space-x-4">
+          <label className="text-white">Application Date:</label>
+          <Calendar selected={applicationDateFilter} onSelect={setApplicationDateFilter} />
+        </div>
+        <div className="flex items-center space-x-4">
+          <label className="text-white">Sort by:</label>
+          <Select value={sortBy} onValueChange={setSortBy} />
+        </div>
+      </div>
 
-        <style>
-          {`
-            @container(max-width:56px){.table-23738f56-7fb3-4d5d-80a5-14a2bcaf059e-column-56{display: none;}}
-            @container(max-width:176px){.table-23738f56-7fb3-4d5d-80a5-14a2bcaf059e-column-176{display: none;}}
-            /* Add more media queries as needed */
-          `}
-        </style>
+      {/* Loan cards section */}
+      <div className="space-y-4">
+        {filteredLoans.map((loan) => (
+          <LoanCard key={loan.id} />
+        ))}
       </div>
     </div>
   );
 };
 
-export default LoanDetails;
+export default LendDetails;
