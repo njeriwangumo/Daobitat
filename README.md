@@ -33,6 +33,13 @@ DAO-Bitat is a decentralized property listing platform that revolutionizes real 
 
 Our `CertificateOfLien` smart contract manages lien certificates for properties as ERC721 (NFT) tokens.
 
+The contract uses OpenZeppelin's Ownable module to give certain permissions (like the ability to transfer defaulted properties) only to the contract owner.
+Input Summary:
+createLien: Requires landPrice, period, and interestRate.
+repayLoan: Requires tokenId and a payment (via msg.value).
+calculateRepaymentAmount: Requires tokenId.
+transferAfterDefault: Requires tokenId.
+
 ### Key Functions:
 
 - `createLien`: Mint a new NFT representing a lien.
@@ -50,6 +57,10 @@ Gas-Optimized: Benefit from Base's Layer 2 solution for faster and cheaper trans
 User-Friendly: Simplified wallet management for both experienced crypto users and newcomers.
 
 ## Loan Process Flow
+A borrower creates a lien using createLien(), which mints an NFT and records the loan details.
+The borrower can repay the loan through repayLoan(), which calculates the due amount based on interest accrued over time.
+If the borrower fails to repay the loan within the given period, the contract owner can take possession of the lien (symbolizing a default) using transferAfterDefault().
+
 
 1. Loan Request submitted
 2. Request approved by DAO-Bitat
