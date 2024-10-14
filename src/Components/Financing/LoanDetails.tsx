@@ -11,6 +11,37 @@ const customStyles: CSSProperties = {
   fontFamily: '"Public Sans", "Noto Sans", sans-serif',
 };
 
+const currencies = [
+ 
+  { code: 'KES', name: 'Kenyan Shilling' },
+  { code: 'TZS', name: 'Tanzanian Shilling' },
+  { code: 'UGX', name: 'Ugandan Shilling' },
+
+ 
+  { code: 'USD', name: 'US Dollar' },
+  { code: 'EUR', name: 'Euro' },
+  { code: 'GBP', name: 'British Pound' },
+  { code: 'JPY', name: 'Japanese Yen' },
+  { code: 'CHF', name: 'Swiss Franc' },
+  { code: 'CAD', name: 'Canadian Dollar' },
+  { code: 'AUD', name: 'Australian Dollar' },
+  { code: 'CNY', name: 'Chinese Yuan' },
+
+ 
+  { code: 'BTC', name: 'Bitcoin' },
+  { code: 'ETH', name: 'Ethereum' },
+  { code: 'BNB', name: 'Binance Coin' },
+  { code: 'XRP', name: 'Ripple' },
+  { code: 'ADA', name: 'Cardano' },
+
+ 
+  { code: 'USDT', name: 'Tether' },
+  { code: 'USDC', name: 'USD Coin' },
+  { code: 'BUSD', name: 'Binance USD' },
+  { code: 'DAI', name: 'Dai' },
+  { code: 'TUSD', name: 'TrueUSD' },
+];
+
 const LoanDetails: React.FC = () => {
 
   const { user } = useUser();
@@ -20,6 +51,7 @@ const LoanDetails: React.FC = () => {
   const [loanAmount, setLoanAmount] = useState('');
   const [interestRate, setInterestRate] = useState('');
   const [repaymentPeriod, setRepaymentPeriod] = useState('');
+  const [loanCurrency, setLoanCurrency] = useState('KES');
 
   const fetchProperties = useCallback(async () => {
     try {
@@ -59,13 +91,67 @@ const LoanDetails: React.FC = () => {
     setSelectedProperty('');
   };
 
+  const convertToEth = async (amount: string, fromCurrency: string): Promise<string> => {
+    if (fromCurrency === 'ETH') return amount;
+    
+    try {
+      const apiKey = process.env.REACT_APP_EXCHANGERATE_API_KEY;
+      if (!apiKey) {
+        throw new Error('ExchangeRate API key is not defined');
+      }
+
+      // First, convert the fromCurrency to USD
+      const usdUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${fromCurrency}`;
+      const usdResponse = await fetch(usdUrl);
+      
+      if (!usdResponse.ok) {
+        throw new Error(`HTTP error! status: ${usdResponse.status}`);
+      }
+      
+      const usdData = await usdResponse.json();
+      if (usdData.result !== 'success') {
+        throw new Error(`API Error: ${usdData['error-type']}`);
+      }
+
+      const usdRate = usdData.conversion_rates.USD;
+      const amountInUsd = parseFloat(amount) * usdRate;
+
+      // Then, convert USD to ETH
+      const ethUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/USD`;
+      const ethResponse = await fetch(ethUrl);
+      
+      if (!ethResponse.ok) {
+        throw new Error(`HTTP error! status: ${ethResponse.status}`);
+      }
+      
+      const ethData = await ethResponse.json();
+      if (ethData.result !== 'success') {
+        throw new Error(`API Error: ${ethData['error-type']}`);
+      }
+
+      const ethRate = ethData.conversion_rates.ETH;
+      const ethAmount = amountInUsd * ethRate;
+
+      return ethAmount.toFixed(18); // 18 decimal places for ETH
+    } catch (error) {
+      console.error('Error in convertToEth:', error);
+      throw error;
+    }
+  };
+
+      
+    
   const handleSubmit = async () => {
     try {
+      const ethAmount = await convertToEth(loanAmount, loanCurrency);
       const userUid = user.uid;
       const loanRequestRef = collection(firestore, 'financing', 'Requested loans', userUid);
       await addDoc(loanRequestRef, {
         propertyId: selectedProperty,
-        loanAmount,
+        loanAmount: ethAmount,
+        loanCurrency: 'ETH',
+        originalAmount: loanAmount,
+        originalCurrency: loanCurrency,
         interestRate,
         repaymentPeriod,
         timestamp: new Date(),
@@ -75,6 +161,7 @@ const LoanDetails: React.FC = () => {
       // Reset form after successful submission
       setSelectedProperty('');
       setLoanAmount('');
+      setLoanCurrency('KES');
       setInterestRate('');
       setRepaymentPeriod('');
     } catch (error) {
@@ -82,6 +169,7 @@ const LoanDetails: React.FC = () => {
       alert('Failed to submit loan request. Please try again.');
     }
   };
+
 
   return (
     <div className="layout-container flex h-full grow flex-col">
@@ -100,7 +188,19 @@ const LoanDetails: React.FC = () => {
                 className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-white focus:outline-0 focus:ring-0 border border-[#533c47] bg-[#261c21] focus:border-[#533c47] h-14 placeholder:text-[#b89dab] p-[15px] text-base font-normal leading-normal"
               />
             </label>
+            <select
+              value={loanCurrency}
+              onChange={(e) => setLoanCurrency(e.target.value)}
+              className="form-select w-24 rounded-xl text-white focus:outline-0 focus:ring-0 border border-[#533c47] bg-[#261c21] focus:border-[#533c47] h-14 placeholder:text-[#b89dab] p-[15px] text-base font-normal leading-normal"
+            >
+              {currencies.map((currency) => (
+                <option key={currency.code} value={currency.code}>
+                  {currency.code}
+                </option>
+              ))}
+            </select>
           </div>
+          
           
           {/* Interest rate input */}
           <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">

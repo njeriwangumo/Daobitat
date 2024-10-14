@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ethers } from 'ethers';
 import './CreateLien.css';
+import { doc, setDoc, collection } from 'firebase/firestore';
+import { firestore } from '../../firebaseConfig'; 
 
 const CONTRACT_ADDRESS = '0x5942c3c250dDEAAcD69d1aB7cCD81c261cF15204';
 const CONTRACT_ABI = [
@@ -20,6 +22,27 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
   const [interestRate, setInterestRate] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  const addLienToFirestore = async (tokenId: string, borrowerAddress: string) => {
+    try {
+      const lienRef = doc(collection(firestore, 'liens'));
+      await setDoc(lienRef, {
+        tokenId,
+        propertyId,
+        borrowerAddress,
+        loanAmount,
+        landPrice,
+        loanPeriod,
+        interestRate,
+        createdAt: new Date(),
+        status: 'active'
+      });
+      console.log("Lien added to Firestore");
+    } catch (error) {
+      console.error("Error adding lien to Firestore:", error);
+      throw error;
+    }
+  };
 
   const handleCreateLien = async () => {
     try {
@@ -105,6 +128,9 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
 
       if (lienCreatedEvent && lienCreatedEvent.args) {
         const tokenId = lienCreatedEvent.args[0];
+        const borrowerAddress = await signer.getAddress();
+
+        await addLienToFirestore(tokenId, borrowerAddress);
         setSuccess(`Lien created successfully! Token ID: ${tokenId.toString()}`);
       } else {
         setSuccess("Lien created successfully, but couldn't retrieve Token ID.");
