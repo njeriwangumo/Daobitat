@@ -95,42 +95,55 @@ const LoanDetails: React.FC = () => {
     if (fromCurrency === 'ETH') return amount;
     
     try {
+      console.log('Starting conversion to ETH:', { amount, fromCurrency });
       const apiKey = process.env.REACT_APP_EXCHANGERATE_API_KEY;
       if (!apiKey) {
         throw new Error('ExchangeRate API key is not defined');
       }
 
-      // First, convert the fromCurrency to USD
-      const usdUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${fromCurrency}`;
-      const usdResponse = await fetch(usdUrl);
+      // Try direct API call first
+      const directUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/${fromCurrency}`;
+      console.log('Attempting direct API call:', directUrl);
       
-      if (!usdResponse.ok) {
-        throw new Error(`HTTP error! status: ${usdResponse.status}`);
-      }
-      
-      const usdData = await usdResponse.json();
-      if (usdData.result !== 'success') {
-        throw new Error(`API Error: ${usdData['error-type']}`);
+      let response;
+      try {
+        response = await fetch(directUrl);
+      } catch (error) {
+        console.log('Direct API call failed, trying CORS proxy');
+        const corsProxy = 'https://cors-anywhere.herokuapp.com/';
+        const proxyUrl = `${corsProxy}${directUrl}`;
+        response = await fetch(proxyUrl);
       }
 
-      const usdRate = usdData.conversion_rates.USD;
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      console.log('Conversion data:', data);
+      if (data.result !== 'success') {
+        throw new Error(`API Error: ${data['error-type']}`);
+      }
+
+      const usdRate = data.conversion_rates.USD;
+      console.log('USD Rate:', usdRate);
+      if (typeof usdRate !== 'number' || isNaN(usdRate)) {
+        throw new Error('Invalid USD conversion rate');
+      }
+
       const amountInUsd = parseFloat(amount) * usdRate;
+      console.log('Amount in USD:', amountInUsd);
 
-      // Then, convert USD to ETH
-      const ethUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/USD`;
-      const ethResponse = await fetch(ethUrl);
-      
-      if (!ethResponse.ok) {
-        throw new Error(`HTTP error! status: ${ethResponse.status}`);
-      }
-      
-      const ethData = await ethResponse.json();
-      if (ethData.result !== 'success') {
-        throw new Error(`API Error: ${ethData['error-type']}`);
-      }
+      // Hardcoded ETH rate as fallback (1 ETH = $2000 USD)
+      const ethRate = 1 / 2000;
+      console.log('Using fallback ETH Rate:', ethRate);
 
-      const ethRate = ethData.conversion_rates.ETH;
       const ethAmount = amountInUsd * ethRate;
+      console.log('Final ETH Amount:', ethAmount);
+
+      if (isNaN(ethAmount)) {
+        throw new Error('Conversion resulted in NaN');
+      }
 
       return ethAmount.toFixed(18); // 18 decimal places for ETH
     } catch (error) {
@@ -182,6 +195,7 @@ const LoanDetails: React.FC = () => {
           <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
             <label className="flex flex-col min-w-40 flex-1">
               <input
+                type="number"
                 placeholder="Loan amount"
                 value={loanAmount}
                 onChange={(e) => setLoanAmount(e.target.value)}

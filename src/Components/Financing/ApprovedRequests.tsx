@@ -76,11 +76,12 @@ const ApprovedRequests: React.FC = () => {
                     <p>Repayment Period: {request.repaymentPeriod}</p>
                     <p>Requested on: {request.timestamp.toDate().toLocaleString()}</p>
                   </div>
+                  <button>View Collateral</button>
                   <button 
                     onClick={openCreateLien}
                     className="mt-2 bg-[#533c47] text-white rounded-xl px-4 py-2 text-sm font-medium hover:bg-[#3b2934] focus:outline-none focus:ring-2 focus:ring-[#b89dab]"
                   >
-                    Create lien for {request.propertyId}
+                    Go live on MarketPlace 
                   </button>
 
                   {isCreateLienOpen && (

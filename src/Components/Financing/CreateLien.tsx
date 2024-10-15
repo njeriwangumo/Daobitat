@@ -35,7 +35,7 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
         loanPeriod,
         interestRate,
         createdAt: new Date(),
-        status: 'active'
+        status: 'in-marketplace'
       });
       console.log("Lien added to Firestore");
     } catch (error) {
