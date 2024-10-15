@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { ethers } from 'ethers';
 import './CreateLien.css';
-import { doc, setDoc, collection } from 'firebase/firestore';
-import { firestore } from '../../firebaseConfig'; 
+import { doc, setDoc, collection, addDoc, updateDoc, query, where, getDocs} from 'firebase/firestore';
+import { firestore } from '../../firebaseConfig';
+import { useUser } from '../../contexts/UserContext'; 
 
 const CONTRACT_ADDRESS = '0x5942c3c250dDEAAcD69d1aB7cCD81c261cF15204';
 const CONTRACT_ABI = [
@@ -22,11 +23,15 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
   const [interestRate, setInterestRate] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const { user } = useUser();
+
+  const intLoanAmount = parseFloat(loanAmount);
+  const intLandPrice = parseFloat(landPrice);
+
 
   const addLienToFirestore = async (tokenId: string, borrowerAddress: string) => {
     try {
-      const lienRef = doc(collection(firestore, 'liens'));
-      await setDoc(lienRef, {
+      const lienData = {
         tokenId,
         propertyId,
         borrowerAddress,
@@ -36,8 +41,37 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
         interestRate,
         createdAt: new Date(),
         status: 'in-marketplace'
-      });
-      console.log("Lien added to Firestore");
+      };
+
+      const userUid = user.uid;
+
+      // Find the existing loan document
+      const loanRequestRef = collection(firestore, 'financing', 'Requested loans', userUid);
+      const q = query(loanRequestRef, where("propertyId", "==", propertyId));
+      const querySnapshot = await getDocs(q);
+
+      if (!querySnapshot.empty) {
+        // Update the existing document
+        const loanDoc = querySnapshot.docs[0];
+        await updateDoc(doc(firestore, 'financing', 'Requested loans', userUid, loanDoc.id), {
+          status: 'in-marketplace',
+          tokenId,
+          borrowerAddress,
+          // Add any other fields that need updating
+        });
+
+        console.log("Loan request updated in Firestore");
+      } else {
+        console.error("Loan request not found");
+        throw new Error("Loan request not found");
+      }
+
+
+      // Add to marketplace collection
+      const marketplaceRef = doc(collection(firestore, 'marketplace'));
+      await setDoc(marketplaceRef, lienData);
+
+      console.log("Lien added to Firestore and marketplace");
     } catch (error) {
       console.error("Error adding lien to Firestore:", error);
       throw error;
