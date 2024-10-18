@@ -25,18 +25,32 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
   const [success, setSuccess] = useState('');
   const { user } = useUser();
 
-  const intLoanAmount = parseFloat(loanAmount);
-  const intLandPrice = parseFloat(landPrice);
+  const isValidEthValue = (value: string): boolean => {
+    const parsed = parseFloat(value);
+    return !isNaN(parsed) && parsed > 0;
+  };
+  
+  const formatEthValue = (value: string): string => {
+    if (!isValidEthValue(value)) {
+      return "Invalid Amount";
+    }
+    return parseFloat(value).toFixed(4);
+  };
 
 
   const addLienToFirestore = async (tokenId: string, borrowerAddress: string) => {
     try {
+
+      if (!isValidEthValue(loanAmount) || !isValidEthValue(landPrice)) {
+        throw new Error("Invalid loan amount or land price");
+      }
+
       const lienData = {
         tokenId,
         propertyId,
         borrowerAddress,
-        loanAmount,
-        landPrice,
+        loanAmount: parseFloat(loanAmount),
+        landPrice: parseFloat(landPrice),
         loanPeriod,
         interestRate,
         createdAt: new Date(),
@@ -57,7 +71,7 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
           status: 'in-marketplace',
           tokenId,
           borrowerAddress,
-          // Add any other fields that need updating
+         
         });
 
         console.log("Loan request updated in Firestore");
@@ -80,6 +94,11 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
 
   const handleCreateLien = async () => {
     try {
+
+      if (!isValidEthValue(loanAmount) || !isValidEthValue(landPrice)) {
+        throw new Error("Invalid loan amount or land price");
+      }
+
       if (!window.ethereum) {
         throw new Error("Please install MetaMask!");
       }
@@ -137,7 +156,7 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
       const periodInSeconds = BigInt(parseInt(loanPeriod) * 24 * 60 * 60); // Convert days to seconds
       const interestRateScaled = BigInt(Math.floor(parseFloat(interestRate) * 100)); // Scale up by 100 for precision
 
-      const collateralAmount = landPriceWei / BigInt(10); // 10% of land price
+      const collateralAmount = landPriceWei / BigInt(10); 
 
       const tx = await contract.createLien(landPriceWei, periodInSeconds, interestRateScaled, {
         value: collateralAmount
@@ -186,11 +205,11 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
         </div>
         <div className="info-item">
           <span className="label">Loan Amount:</span>
-          <span className="value">{loanAmount} ETH</span>
+          <span className="value">{formatEthValue(loanAmount)} ETH</span>
         </div>
         <div className="info-item">
           <span className="label">Land Price:</span>
-          <span className="value">{landPrice} ETH</span>
+          <span className="value">{formatEthValue(landPrice)}ETH</span>
         </div>
       </div>
       <div className="input-group">
@@ -218,9 +237,13 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
           required
         />
       </div>
-      <button onClick={handleCreateLien} className="submit-button">
-        Submit to Marketplace for Financing
-      </button>
+      <button 
+  onClick={handleCreateLien} 
+  className="submit-button"
+  disabled={!isValidEthValue(loanAmount) || !isValidEthValue(landPrice)}
+>
+  Submit to Marketplace for Financing
+</button>
 
       <button onClick={onClose} className="cancel-button">
         Cancel
