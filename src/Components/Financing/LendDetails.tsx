@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import PriceRangeCheckboxes from './PriceRange';
+import { FaSearch } from 'react-icons/fa';
 
 interface NFTMetadata {
   name: string;
@@ -12,6 +14,12 @@ interface NFT {
   priceEth: string;
   datePosted: string;
   baseScore: string;
+}
+
+interface PriceRange {
+  label: string;
+  min: number;
+  max: number | null;
 }
 
 const dummyNFTs: NFT[] = [
@@ -64,24 +72,59 @@ const dummyNFTs: NFT[] = [
 const NFTMarketplace: React.FC = () => {
   const [nfts] = useState<NFT[]>(dummyNFTs);
   const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [image, setImage] = useState('');
-  const [price, setPrice] = useState('');
+  const [location, setLocation] = useState('');
+  const [selectedPriceRanges, setSelectedPriceRanges] = useState<PriceRange[]>([]);
 
-  const handleMint = (): void => {
-    alert('Minting functionality is not implemented in this dummy version');
+  const handleSearch = (): void => {
+    alert(`Searching for:
+    Name: ${name}
+    Location: ${location}
+    Price Ranges: ${selectedPriceRanges.map(range => range.label).join(', ')}`);
   };
+
 
   const handleView = (id: string): void => {
     alert(`Viewing NFT with ID: ${id}`);
   };
 
+  const handleInvest = (id: string): void => {
+    alert(`Viewing NFT with ID: ${id}`);
+  };
+
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 ">
       <h1 className="text-4xl font-bold mb-4">NFT Marketplace</h1>
-      <button className="bg-[#4a3c41] text-white px-4 py-2 rounded mb-4 hover:bg-[#5a4c51] transition-colors duration-300 ease-in-out">
-  Connect Wallet
-</button>
+
+      <div className="mb-4">
+        <h2 className="text-2xl font-semibold mb-4">Search approved Loans</h2>
+        <div className="flex items-center space-x-2">
+          <input
+            type="text"
+            placeholder="Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="border p-2 flex-grow text-black"
+          />
+          <input
+            type="text"
+            placeholder="Location"
+            value={location}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLocation(e.target.value)}
+            className="border p-2 flex-grow text-black"
+          />
+          
+          <PriceRangeCheckboxes 
+          onChange={setSelectedPriceRanges} 
+          />
+           <button
+            onClick={handleSearch}
+            className="bg-[#533c47] text-white w-10 h-10 rounded hover:bg-[#b7e3cc] transition-colors duration-300 ease-in-out flex items-center justify-center flex-shrink-0"
+          >
+            <FaSearch size={16} />
+          </button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-3 gap-4 mb-8">
         {nfts.map((nft) => (
           <div key={nft.id} className="border p-4 rounded shadow-lg">
@@ -91,50 +134,23 @@ const NFTMarketplace: React.FC = () => {
             <p className="text-sm"><strong>ID:</strong> {nft.id}</p>
             <p className="text-sm"><strong>Price:</strong> {nft.priceEth} ETH</p>
             <p className="text-sm"><strong>Posted:</strong> {nft.datePosted}</p>
+            <div className="flex space-x-2 mt-2">
             <button 
               onClick={() => handleView(nft.id)}
-              className="mt-2 bg-[#5f133e] text-white px-4 py-2 rounded w-full"
+              className="mt-2 bg-[#533c47] text-white px-4 py-2 rounded w-full hover:bg-[#b7e3cc] transition-colors duration-300 ease-in-out"
             >
               View
             </button>
+            <button 
+              onClick={() => handleInvest(nft.id)}
+              className="mt-2 bg-[#533c47] text-white px-4 py-2 rounded w-full hover:bg-[#b7e3cc] transition-colors duration-300 ease-in-out"
+            >
+              Invest
+            </button>
+            </div>
           </div>
         ))}
       </div>
-      <h2 className="text-2xl font-semibold mb-4">Search approved Loans</h2>
-      <input
-        type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
-        className="border p-2 mb-2 w-full"
-      />
-      <input
-        type="text"
-        placeholder="Description"
-        value={description}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setDescription(e.target.value)}
-        className="border p-2 mb-2 w-full"
-      />
-      <input
-        type="text"
-        placeholder="Image URL"
-        value={image}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setImage(e.target.value)}
-        className="border p-2 mb-2 w-full"
-      />
-      <input
-        type="number"
-        placeholder="Price (ETH)"
-        value={price}
-        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPrice(e.target.value)}
-        className="border p-2 mb-4 w-full"
-      />
-      <button
-        onClick={handleMint}
-        className="bg-[#5f133e] text-white px-4 py-2 rounded"
-      >
-        Search
-      </button>
     </div>
   );
 };

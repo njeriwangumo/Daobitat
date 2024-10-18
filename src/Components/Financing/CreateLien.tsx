@@ -40,7 +40,6 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
 
   const addLienToFirestore = async (tokenId: string, borrowerAddress: string) => {
     try {
-
       if (!isValidEthValue(loanAmount) || !isValidEthValue(landPrice)) {
         throw new Error("Invalid loan amount or land price");
       }
@@ -59,27 +58,23 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
 
       const userUid = user.uid;
 
-      // Find the existing loan document
+      // Update the existing loan request document
       const loanRequestRef = collection(firestore, 'financing', 'Requested loans', userUid);
       const q = query(loanRequestRef, where("propertyId", "==", propertyId));
       const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
-        // Update the existing document
         const loanDoc = querySnapshot.docs[0];
         await updateDoc(doc(firestore, 'financing', 'Requested loans', userUid, loanDoc.id), {
           status: 'in-marketplace',
           tokenId,
           borrowerAddress,
-         
         });
-
         console.log("Loan request updated in Firestore");
       } else {
         console.error("Loan request not found");
         throw new Error("Loan request not found");
       }
-
 
       // Add to marketplace collection
       const marketplaceRef = doc(collection(firestore, 'marketplace'));
@@ -91,6 +86,7 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
       throw error;
     }
   };
+
 
   const handleCreateLien = async () => {
     try {
@@ -179,12 +175,12 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
         })
         .find((event: any) => event?.name === 'LienCreated');
 
-      if (lienCreatedEvent && lienCreatedEvent.args) {
-        const tokenId = lienCreatedEvent.args[0];
-        const borrowerAddress = await signer.getAddress();
-
-        await addLienToFirestore(tokenId, borrowerAddress);
-        setSuccess(`Lien created successfully! Token ID: ${tokenId.toString()}`);
+        if (lienCreatedEvent && lienCreatedEvent.args) {
+          const tokenId = lienCreatedEvent.args[0].toString();
+          const borrowerAddress = await signer.getAddress();
+  
+          await addLienToFirestore(tokenId, borrowerAddress);
+          setSuccess(`Lien created successfully! Token ID: ${tokenId.toString()}`);
       } else {
         setSuccess("Lien created successfully, but couldn't retrieve Token ID.");
       }
@@ -238,7 +234,7 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
         />
       </div>
       <button 
-  onClick={handleCreateLien} 
+  onClick={handleCreateLien } 
   className="submit-button"
   disabled={!isValidEthValue(loanAmount) || !isValidEthValue(landPrice)}
 >
