@@ -6,6 +6,7 @@ interface NFTMetadata {
   name: string;
   description: string;
   image: string;
+
 }
 
 interface NFT {
@@ -13,7 +14,8 @@ interface NFT {
   metadata: NFTMetadata;
   priceEth: string;
   datePosted: string;
-  baseScore: string;
+  
+
 }
 
 interface PriceRange {
@@ -26,35 +28,34 @@ const dummyNFTs: NFT[] = [
   {
     id: '1',
     metadata: {
-      name: 'Cool Cat #1',
-      description: 'A very cool cat NFT',
+      name: 'Property in Syokimau',
+      description: '3 Acre undeveloped land on LR345',
       image: 'https://placekitten.com/200/200',
-    },
+      },
     priceEth: '0.05',
     datePosted: '2024-10-15',
-    baseScore: '5',
+
   },
   {
     id: '2',
     metadata: {
-      name: 'Awesome Dog #1',
-      description: 'An awesome dog NFT',
+      name: 'Property In Lagos',
+      description: 'a 3bedroom Apartment',
       image: 'https://placedog.net/200/200',
     },
     priceEth: '0.07',
     datePosted: '2024-10-14',
-    baseScore: '4',
   },
   {
     id: '3',
     metadata: {
-      name: 'Cute Bunny #1',
-      description: 'A cute bunny NFT',
+      name: 'Pharmaceuticals Receivable assets',
+      description: 'Assets under Lien for the period 2024',
       image: '/api/placeholder/200/200',
     },
     priceEth: '0.03',
     datePosted: '2024-10-16',
-    baseScore: '2',
+  
   },
   {
     id: '4',
@@ -65,7 +66,7 @@ const dummyNFTs: NFT[] = [
     },
     priceEth: '0.03',
     datePosted: '2024-10-16',
-    baseScore: '-1',
+  
   },
 ];
 
@@ -93,10 +94,10 @@ const NFTMarketplace: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 ">
-      <h1 className="text-4xl font-bold mb-4">NFT Marketplace</h1>
+      <h1 className="text-4xl font-bold mb-4">Venture Vineyard</h1>
 
       <div className="mb-4">
-        <h2 className="text-2xl font-semibold mb-4">Search approved Loans</h2>
+        <h2 className="text-2xl font-semibold mb-4">Piece together a vibrant tapestry of projects, where every investment adds color to the big picture</h2>
         <div className="flex items-center space-x-2">
           <input
             type="text"

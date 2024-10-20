@@ -185,12 +185,20 @@ const LoanDetails: React.FC = () => {
 
 
   return (
+    
     <div className="layout-container flex h-full grow flex-col">
+      <h2 className="text-[#b7e3cc] text-[42px] font-bold leading-tight tracking-[-0.015em] w-full text-center">
+        Discover the depth of your Assets in a Global world
+    </h2>
+    <h2 className="text-white text-[28px] font-thin leading-tight tracking-[-0.015em] w-full text-center">
+        Get started by letting us know more about your requirements
+    </h2>
+
+
       <div className="px-40 flex flex-1 justify-center py-5">
         <div className="layout-content-container flex flex-col w-[512px] max-w-[512px] py-5 flex-1">
           
-          <h2 className="text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">Loan details</h2>
-          
+        
           {/* Loan amount input */}
           <div className="flex max-w-[480px] flex-wrap items-end gap-4 px-4 py-3">
             <label className="flex flex-col min-w-40 flex-1">
