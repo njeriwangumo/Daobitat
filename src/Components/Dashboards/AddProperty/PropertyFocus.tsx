@@ -1,17 +1,23 @@
-import React, { useState } from 'react';
-import { FaTimes, FaPencilAlt, FaEye } from 'react-icons/fa';
+import React, { useState, useRef } from 'react';
+import { FaTimes, FaPencilAlt, FaEye, FaTrash, FaPlus } from 'react-icons/fa';
 import './PropertyFocus.css';
 import ImageCarousel from './ImageCarousel';
 import { doc, updateDoc, setDoc } from "firebase/firestore"; 
-import { firestore } from '../../../firebaseConfig';
+import { firestore, storage } from '../../../firebaseConfig';
 import { useUser } from '../../../contexts/UserContext';
 import TermsPopup from './DaoTerms/DaoTerms';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
+
 
 const PropertyFocus: React.FC<{ property: any; onClose: () => void }> = ({ property, onClose }) => {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [editableProperty, setEditableProperty] = useState(property);
+  const [editableProperty, setEditableProperty] = useState(() => ({
+    ...property,
+    images: Array.isArray(property.images) ? property.images : []
+  }));
   const { user } = useUser();
   const [isTermsPopupVisible, setIsTermsPopupVisible] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const toggleMode = () => {
     setIsEditMode(!isEditMode);
@@ -24,6 +30,46 @@ const PropertyFocus: React.FC<{ property: any; onClose: () => void }> = ({ prope
       ...prev,
       [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
     }));
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length === 0) return;
+    
+    const file = e.target.files[0];
+    const storageRef = ref(storage, `properties/${property.id}/${file.name}`);
+    
+    try {
+      const snapshot = await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(snapshot.ref);
+      
+      setEditableProperty((prev: any) => {
+        const currentImages = Array.isArray(prev.images) ? prev.images : [];
+        return {
+          ...prev,
+          images: [...currentImages, downloadURL],
+        };
+      });
+    } catch (error) {
+      console.error("Error uploading image: ", error);
+    }
+  };
+
+  const handleImageDelete = async (imageUrl: string) => {
+    const imageRef = ref(storage, imageUrl);
+    
+    try {
+      await deleteObject(imageRef);
+      
+      setEditableProperty((prev: any) => {
+        const currentImages = Array.isArray(prev.images) ? prev.images : [];
+        return {
+          ...prev,
+          images: currentImages.filter((img: string) => img !== imageUrl),
+        };
+      });
+    } catch (error) {
+      console.error("Error deleting image: ", error);
+    }
   };
 
   const handleDaoButtonClick = () => {
@@ -64,6 +110,7 @@ const PropertyFocus: React.FC<{ property: any; onClose: () => void }> = ({ prope
         unitNo: editableProperty.unitNo || "",
         location: editableProperty.location || "",
         additionalComments: editableProperty.additionalComments || "",
+        images: editableProperty.images || [], 
         
       });
   
@@ -105,10 +152,32 @@ const PropertyFocus: React.FC<{ property: any; onClose: () => void }> = ({ prope
         </button>
 
         <div className="property-focus-images">
-          <ImageCarousel
-            images={images}
-            altText={images.map((_:any, index:number) => `${propertyName} image ${index + 1}`)}
-          />
+        <ImageCarousel
+    images={editableProperty.images || []}
+    altText={(editableProperty.images || []).map((_: any, index: number) => `${editableProperty.propertyName || 'Property'} image ${index + 1}`)}
+  />
+  {isEditMode && (
+    <div className="image-edit-controls">
+      <button onClick={() => fileInputRef.current?.click()}>
+        <FaPlus /> Add Image
+      </button>
+      <input
+        type="file"
+        ref={fileInputRef}
+        style={{ display: 'none' }}
+        onChange={handleImageUpload}
+        accept="image/*"
+      />
+      {(editableProperty.images || []).map((imageUrl: string, index: number) => (
+        <div key={index} className="image-item">
+          <img src={imageUrl} alt={`Property ${index + 1}`} style={{ width: '50px', height: '50px' }} />
+          <button onClick={() => handleImageDelete(imageUrl)}>
+            <FaTrash />
+          </button>
+        </div>
+      ))}
+    </div>
+  )}
         </div>
 
         <div className="property-focus-header">
