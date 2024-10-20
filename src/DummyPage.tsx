@@ -23,20 +23,37 @@ const loanCardProps = {
 const DummyPage: React.FC = () => {
   return (
     <>
-    <p> Loan Card</p>
-    <LoanCard {...loanCardProps} />
+  <div className="p-4">
+      <div className="mb-8 pb-8 border-b border-gray-300">
+        <h2 className="text-xl font-bold mb-4 text-red-600">Loan Card</h2>
+        <LoanCard {...loanCardProps} />
+      </div>
 
-    <p> NFTs owned</p>
-    <NftsOwned />
-    <p> Payment Success</p>
-    <PaymentSuccess />
-    <p> Portfolio</p>
-    <Portfolio />
-    <p> top picks</p>
-    <TopPicks/>
-    <p> Choose payment method</p>
-    <PaymentMethod />
+      <div className="mb-8 pb-8 border-b border-gray-300">
+        <h2 className="text-xl font-bold mb-4 text-red-600">NFTs Owned</h2>
+        <NftsOwned />
+      </div>
 
+      <div className="mb-8 pb-8 border-b border-gray-300">
+        <h2 className="text-xl font-bold mb-4 text-red-600">Payment Success</h2>
+        <PaymentSuccess />
+      </div>
+
+      <div className="mb-8 pb-8 border-b border-gray-300">
+        <h2 className="text-xl font-bold mb-4 text-red-600">Portfolio</h2>
+        <Portfolio />
+      </div>
+
+      <div className="mb-8 pb-8 border-b border-gray-300">
+        <h2 className="text-xl font-bold mb-4 text-red-600">Top Picks</h2>
+        <TopPicks />
+      </div>
+
+      <div className="mb-8 pb-8 border-b border-gray-300">
+        <h2 className="text-xl font-bold mb-4 text-red-600">Choose Payment Method</h2>
+        <PaymentMethod />
+      </div>
+    </div>
  
 
     </>
