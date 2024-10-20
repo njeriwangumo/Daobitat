@@ -60,19 +60,23 @@ const NFTMarketplace: React.FC = () => {
         const fetchedNFTs: NFT[] = snapshot.docs.map(doc => {
           const data = doc.data();
           console.log("Document data:", data);
+          
+          // Safely access loanAmount and provide a default value
+          const loanAmount = typeof data.loanAmount === 'number' ? data.loanAmount : 0;
+          
           return {
             id: doc.id,
             metadata: {
-              name: `Property ${data.propertyId}`,
-              description: `Loan amount: ${data.loanAmount} ETH`,
+              name: `Property ${data.propertyId || 'Unknown'}`,
+              description: `Loan amount: ${loanAmount} ETH`,
               image: '/api/placeholder/200/200',
             },
-            priceEth: data.loanAmount.toString(),
+            priceEth: loanAmount.toString(),
             datePosted: data.createdAt?.toDate().toISOString().split('T')[0] || 'Unknown Date',
             borrowerAddress: data.borrowerAddress || 'Unknown',
             interestRate: data.interestRate || 'Unknown',
-            landPrice: data.landPrice || 0,
-            loanAmount: data.loanAmount || 0,
+            landPrice: typeof data.landPrice === 'number' ? data.landPrice : 0,
+            loanAmount: loanAmount,
             loanPeriod: data.loanPeriod || 'Unknown',
             propertyId: data.propertyId || 'Unknown',
             status: data.status || 'Unknown',
