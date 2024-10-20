@@ -1,4 +1,13 @@
 import React, { useState } from 'react';
+import { FiDownload } from 'react-icons/fi'; 
+
+interface DownloadButtonProps {
+  url: string;
+  filename: string;
+  label?: string;
+}
+
+
 
 
 const Billings: React.FC = () => {
@@ -46,7 +55,8 @@ const Billings: React.FC = () => {
               </svg>
             </button>
           </div>
-          <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded">Download Transactions</button>
+          <button className="px--2 py--2 bg-hover: bg-slategray  text-white rounded">
+          <FiDownload className="w-8 h-8" /></button>
         </div>
 
         <div className="bg-white p-6 rounded-lg shadow-md mb-6">
@@ -61,7 +71,7 @@ const Billings: React.FC = () => {
             </div>
             <button 
               onClick={() => setIsDialogOpen(true)} 
-              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+              className="mt-4 px-4 py-2 bg-celadon text-white rounded hover:bg-slategray"
             >
               View Transaction
             </button>

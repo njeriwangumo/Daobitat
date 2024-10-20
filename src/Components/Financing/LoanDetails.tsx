@@ -186,7 +186,7 @@ const LoanDetails: React.FC = () => {
 
   return (
     
-    <div className="layout-container flex h-full grow flex-col">
+    <div className="layout-container flex h-full grow flex-col p-8">
       <h2 className="text-[#b7e3cc] text-[42px] font-bold leading-tight tracking-[-0.015em] w-full text-center">
         Discover the depth of your Assets in a Global world
     </h2>
