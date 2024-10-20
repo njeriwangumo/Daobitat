@@ -37,7 +37,7 @@ const FinancingHeader: React.FC<FinancingHeaderProps> = ({ currentTab, onTabChan
             <div className="flex items-center gap-9">
   
             <a className={`text-white text-sm font-medium leading-normal ${currentTab === 'Borrow' ? 'underline' : ''}`} href="#" onClick={() => onTabChange('Borrow')}>Borrow</a>
-          <a className={`text-white text-sm font-medium leading-normal ${currentTab === 'Lend' ? 'underline' : ''}`} href="#" onClick={() => onTabChange('Lend')}>Lend</a>
+          <a className={`text-white text-sm font-medium leading-normal ${currentTab === 'Lend' ? 'underline' : ''}`} href="#" onClick={() => onTabChange('Lend')}>Marketplace</a>
           <a className={`text-white text-sm font-medium leading-normal ${currentTab === 'ApprovedRequests' ? 'underline' : ''}`} href="#" onClick={() => onTabChange('ApprovedRequests')}>Approved requests</a>
           <a className={`text-white text-sm font-medium leading-normal ${currentTab === 'PendingRequests' ? 'underline' : ''}`} href="#" onClick={() => onTabChange('PendingRequests')}>Pending requests</a>
           <a className={`text-white text-sm font-medium leading-normal ${currentTab === 'Statement' ? 'underline' : ''}`} href="#" onClick={() => onTabChange('Statement')}>Statement</a>
