@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState ,useEffect} from 'react';
 import PriceRangeCheckboxes from './PriceRange';
 import { FaSearch } from 'react-icons/fa';
+import { collection, getDocs } from 'firebase/firestore';
+import { firestore } from '../../firebaseConfig'; 
 
 interface NFTMetadata {
   name: string;
@@ -14,6 +16,14 @@ interface NFT {
   metadata: NFTMetadata;
   priceEth: string;
   datePosted: string;
+  borrowerAddress: string;
+  interestRate: string;
+  landPrice: number;
+  loanAmount: number;
+  loanPeriod: string;
+  propertyId: string;
+  status: string;
+  tokenId: string;
   
 
 }
@@ -24,57 +34,67 @@ interface PriceRange {
   max: number | null;
 }
 
-const dummyNFTs: NFT[] = [
-  {
-    id: '1',
-    metadata: {
-      name: 'Property in Syokimau',
-      description: '3 Acre undeveloped land on LR345',
-      image: 'https://placekitten.com/200/200',
-      },
-    priceEth: '0.05',
-    datePosted: '2024-10-15',
 
-  },
-  {
-    id: '2',
-    metadata: {
-      name: 'Property In Lagos',
-      description: 'a 3bedroom Apartment',
-      image: 'https://placedog.net/200/200',
-    },
-    priceEth: '0.07',
-    datePosted: '2024-10-14',
-  },
-  {
-    id: '3',
-    metadata: {
-      name: 'Pharmaceuticals Receivable assets',
-      description: 'Assets under Lien for the period 2024',
-      image: '/api/placeholder/200/200',
-    },
-    priceEth: '0.03',
-    datePosted: '2024-10-16',
-  
-  },
-  {
-    id: '4',
-    metadata: {
-      name: 'Cute Bunny #2',
-      description: 'A cute bunny NFT',
-      image: '/api/placeholder/200/200',
-    },
-    priceEth: '0.03',
-    datePosted: '2024-10-16',
-  
-  },
-];
 
 const NFTMarketplace: React.FC = () => {
-  const [nfts] = useState<NFT[]>(dummyNFTs);
+  const [nfts, setNfts] = useState<NFT[]>([]);
   const [name, setName] = useState('');
   const [location, setLocation] = useState('');
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<PriceRange[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchNFTs = async () => {
+      try {
+        console.log("Fetching NFTs...");
+        const marketplaceRef = collection(firestore, 'marketplace');
+        const snapshot = await getDocs(marketplaceRef);
+        console.log("Snapshot size:", snapshot.size);
+        
+        if (snapshot.empty) {
+          console.log("No documents found in the marketplace collection");
+          setError("No listings available at the moment.");
+          return;
+        }
+
+        const fetchedNFTs: NFT[] = snapshot.docs.map(doc => {
+          const data = doc.data();
+          console.log("Document data:", data);
+          
+          // Safely access loanAmount and provide a default value
+          const loanAmount = typeof data.loanAmount === 'number' ? data.loanAmount : 0;
+          
+          return {
+            id: doc.id,
+            metadata: {
+              name: `Property ${data.propertyId || 'Unknown'}`,
+              description: `Loan amount: ${loanAmount} ETH`,
+              image: '/api/placeholder/200/200',
+            },
+            priceEth: loanAmount.toString(),
+            datePosted: data.createdAt?.toDate().toISOString().split('T')[0] || 'Unknown Date',
+            borrowerAddress: data.borrowerAddress || 'Unknown',
+            interestRate: data.interestRate || 'Unknown',
+            landPrice: typeof data.landPrice === 'number' ? data.landPrice : 0,
+            loanAmount: loanAmount,
+            loanPeriod: data.loanPeriod || 'Unknown',
+            propertyId: data.propertyId || 'Unknown',
+            status: data.status || 'Unknown',
+            tokenId: data.tokenId || 'Unknown',
+          };
+        });
+        console.log("Fetched NFTs:", fetchedNFTs);
+        setNfts(fetchedNFTs);
+      } catch (error) {
+        console.error("Error fetching NFTs:", error);
+        setError("Failed to fetch listings. Please try again later.");
+      }
+    };
+
+    fetchNFTs();
+  }, []);
+
+
 
   const handleSearch = (): void => {
     alert(`Searching for:
@@ -133,7 +153,8 @@ const NFTMarketplace: React.FC = () => {
             <h2 className="font-bold">{nft.metadata.name}</h2>
             <p className="text-sm text-gray-600 mb-2">{nft.metadata.description}</p>
             <p className="text-sm"><strong>ID:</strong> {nft.id}</p>
-            <p className="text-sm"><strong>Price:</strong> {nft.priceEth} ETH</p>
+            <p className="text-sm"><strong>Collateral Price:</strong> {nft.priceEth} ETH</p>
+            <p className="text-sm"><strong>Loan Amount:</strong> {nft.priceEth} ETH</p>
             <p className="text-sm"><strong>Posted:</strong> {nft.datePosted}</p>
             <div className="flex space-x-2 mt-2">
             <button 

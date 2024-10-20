@@ -1,5 +1,4 @@
 import React from 'react';
-
 import './App.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Components/Login/Login';
@@ -12,6 +11,8 @@ import Billings from './Components/Dashboards/AddProperty/Billing/Billings';
 import ComingSoon from './Components/ComingSoon/ComingSoon';
 import CreateLienForm from './Components/Financing/CreateLien';
 import PaymentMethod from './Components/Dashboards/AddProperty/Billing/PaymentMethod';
+import DummyPage from './DummyPage';
+
 // import { FirebaseAuthProvider } from './FirebaseAuthContext';
 
 const App: React.FC = () => {
@@ -29,7 +30,7 @@ const App: React.FC = () => {
         <Route path="/billings" element={<Billings />} />
         <Route path="/comingsoon" element={<ComingSoon />} />
         
-        <Route path="/paymentmethod" element={<PaymentMethod/>} />
+        <Route path="/dummypage" element={<DummyPage/>} />
       </Routes>
     </Router>
     </UserProvider>

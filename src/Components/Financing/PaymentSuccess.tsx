@@ -1,7 +1,7 @@
 import React from 'react';
-import './App.css';
 
-const App: React.FC = () => {
+
+const PaymentSuccess: React.FC = () => {
   return (
     <div className="container">
       <h2>Your payment has been received successfully</h2>
@@ -12,5 +12,5 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default PaymentSuccess;
 
