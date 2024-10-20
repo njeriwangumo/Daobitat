@@ -4,6 +4,7 @@ module.exports = {
     extend: {
       colors: {
         'celadon': '#B7e3cc',
+        'slategray':'#33595C', 
       },
     },
   },
