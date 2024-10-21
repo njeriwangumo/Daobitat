@@ -48,12 +48,7 @@ const FinancingHeader: React.FC<FinancingHeaderProps> = ({ currentTab, onTabChan
             >
               <span className="truncate">Connect Wallet</span>
             </button>
-            <div
-              className="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10"
-              style={{
-                backgroundImage: 'url("https://cdn.usegalileo.ai/sdxl10/d95cea0c-2957-448a-8f02-103cef67ce22.png")'
-              }}
-            ></div>
+           
           </div>
         </header>
         {isPopupOpen && (
