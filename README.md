@@ -1,6 +1,6 @@
 # DAO-Bitat
 
-DAO-Bitat is a decentralized property listing platform that revolutionizes real estate investing through blockchain technology. By tokenizing property assets, we enable co-ownership, group decision-making, and DAO-based property management, bringing transparency and accessibility to the real estate market.
+DAO-Bitat unlocks global financing for African SMEs by leveraging real-world assets as verifiable collateral. As a decentralized property listing platform, it revolutionizes real estate investing through blockchain technology by tokenizing properties into digital assets. This enables verifiability, co-ownership, and traceability of assets across borders, bringing transparency and accessibility to the real estate market, benefiting investors and the entire ecosystem.
 
 ## Current Status
 
@@ -28,6 +28,10 @@ DAO-Bitat is a decentralized property listing platform that revolutionizes real 
 5. **Favorites**: Save and manage favorite properties.
 6. **Messaging**: Direct communication between users.
 7. **Reviews and Ratings**: Rate and review properties and listers.
+8. **Request for loans**: Allows users to borrow loans and draw from the smart contract.
+9. **connect to EOA and smart wallet**: Lenders, borrowers and players in the ecosystem are able to connect to their wallets for any anticipated transactions.
+10. **Make loan payments and activate terms &Conditions** Automatically deduct loan payments from wallet once due,and allow users to review the terms and conditions.
+      
 
 ## Smart Contract: CertificateOfLien
 
