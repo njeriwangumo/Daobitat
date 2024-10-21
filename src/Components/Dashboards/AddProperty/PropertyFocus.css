@@ -45,4 +45,18 @@
   button{
     max-width: 20vw;
   }
+
+  label{
+    color:black;
+  }
+
+  h2{
+    color: black;
+  }
+
+ 
+
+  .property-focus-content p {
+    color: black;
+  }
   

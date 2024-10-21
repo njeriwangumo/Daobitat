@@ -1,7 +1,7 @@
 import React, { useState ,useEffect} from 'react';
 import PriceRangeCheckboxes from './PriceRange';
 import { FaSearch } from 'react-icons/fa';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs ,getDoc, doc,DocumentData} from 'firebase/firestore';
 import { firestore } from '../../firebaseConfig'; 
 
 interface NFTMetadata {
@@ -11,12 +11,24 @@ interface NFTMetadata {
 
 }
 
+interface PropertyDetails {
+  propertyName: string;
+  location: string;
+  price: string;
+  images: string[];
+  bedrooms: string;
+  bathrooms: string;
+  space: string;
+  // Add other property details as needed
+}
+
 interface NFT {
   id: string;
   metadata: NFTMetadata;
   priceEth: string;
   datePosted: string;
   borrowerAddress: string;
+  borrowerId: string;
   interestRate: string;
   landPrice: number;
   loanAmount: number;
@@ -24,9 +36,9 @@ interface NFT {
   propertyId: string;
   status: string;
   tokenId: string;
-  
-
+  propertyDetails: PropertyDetails;
 }
+
 
 interface PriceRange {
   label: string;
@@ -44,7 +56,7 @@ const NFTMarketplace: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchNFTs = async () => {
+    const fetchNFTsWithDetails = async () => {
       try {
         console.log("Fetching NFTs...");
         const marketplaceRef = collection(firestore, 'marketplace');
@@ -57,23 +69,55 @@ const NFTMarketplace: React.FC = () => {
           return;
         }
 
-        const fetchedNFTs: NFT[] = snapshot.docs.map(doc => {
-          const data = doc.data();
-          console.log("Document data:", data);
+        const fetchedNFTs: NFT[] = await Promise.all(snapshot.docs.map(async (document) => {
+          const data = document.data();
+          console.log("Marketplace document data:", data);
           
-          // Safely access loanAmount and provide a default value
           const loanAmount = typeof data.loanAmount === 'number' ? data.loanAmount : 0;
           
+          // Fetch property details from users collection
+          let propertyDetails: PropertyDetails = {
+            propertyName: '',
+            location: '',
+            price: '',
+            images: [],
+            bedrooms: '',
+            bathrooms: '',
+            space: ''
+          };
+          try {
+            const userPropertyRef = doc(firestore, 'users', data.borrowerId, 'properties', data.propertyId);
+            const propertyDoc = await getDoc(userPropertyRef);
+            if (propertyDoc.exists()) {
+              const propertyData = propertyDoc.data() as DocumentData;
+              propertyDetails = {
+                propertyName: propertyData.propertyName || '',
+                location: propertyData.location || '',
+                price: propertyData.price || '',
+                images: propertyData.images || [],
+                bedrooms: propertyData.bedrooms || '',
+                bathrooms: propertyData.bathrooms || '',
+                space: propertyData.space || ''
+              };
+              console.log("Property details:", propertyDetails);
+            } else {
+              console.log("No property details found for:", data.propertyId);
+            }
+          } catch (error) {
+            console.error("Error fetching property details:", error);
+          }
+
           return {
-            id: doc.id,
+            id: document.id,
             metadata: {
-              name: `Property ${data.propertyId || 'Unknown'}`,
-              description: `Loan amount: ${loanAmount} ETH`,
-              image: '/api/placeholder/200/200',
+              name: propertyDetails.propertyName || `Property ${data.propertyId || 'Unknown'}`,
+              description: `${propertyDetails.bedrooms || ''} bed, ${propertyDetails.bathrooms || ''} bath, ${propertyDetails.space || ''} sqft`,
+              image: propertyDetails.images && propertyDetails.images.length > 0 ? propertyDetails.images[0] : '/api/placeholder/200/200',
             },
             priceEth: loanAmount.toString(),
             datePosted: data.createdAt?.toDate().toISOString().split('T')[0] || 'Unknown Date',
             borrowerAddress: data.borrowerAddress || 'Unknown',
+            borrowerId: data.borrowerId || 'Unknown',            
             interestRate: data.interestRate || 'Unknown',
             landPrice: typeof data.landPrice === 'number' ? data.landPrice : 0,
             loanAmount: loanAmount,
@@ -81,9 +125,11 @@ const NFTMarketplace: React.FC = () => {
             propertyId: data.propertyId || 'Unknown',
             status: data.status || 'Unknown',
             tokenId: data.tokenId || 'Unknown',
+            propertyDetails: propertyDetails,
           };
-        });
-        console.log("Fetched NFTs:", fetchedNFTs);
+        }));
+
+        console.log("Fetched NFTs with details:", fetchedNFTs);
         setNfts(fetchedNFTs);
       } catch (error) {
         console.error("Error fetching NFTs:", error);
@@ -91,7 +137,7 @@ const NFTMarketplace: React.FC = () => {
       }
     };
 
-    fetchNFTs();
+    fetchNFTsWithDetails();
   }, []);
 
 
@@ -159,9 +205,11 @@ const NFTMarketplace: React.FC = () => {
             <img src={nft.metadata.image} alt={nft.metadata.name} className="mb-2 w-full h-48 object-cover" />
             <h2 className="font-bold">{nft.metadata.name}</h2>
             <p className="text-sm text-gray-600 mb-2">{nft.metadata.description}</p>
-            <p className="text-sm"><strong>ID:</strong> {nft.id}</p>
-            <p className="text-sm"><strong>Collateral Price:</strong> {nft.priceEth} ETH</p>
-            <p className="text-sm"><strong>Loan Amount:</strong> {nft.priceEth} ETH</p>
+            <p className="text-sm"><strong>Location:</strong> {nft.propertyDetails.location}</p>
+            <p className="text-sm"><strong>Property Value:</strong> ${nft.propertyDetails.price}</p>
+            <p className="text-sm"><strong>Loan Amount:</strong> {nft.loanAmount} ETH</p>
+            <p className="text-sm"><strong>Interest Rate:</strong> {nft.interestRate}</p>
+            <p className="text-sm"><strong>Loan Period:</strong> {nft.loanPeriod}</p>
             <p className="text-sm"><strong>Posted:</strong> {nft.datePosted}</p>
             <div className="flex space-x-2 mt-2">
             <button 

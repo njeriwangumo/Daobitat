@@ -44,10 +44,13 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
         throw new Error("Invalid loan amount or land price");
       }
 
+      const borrowerId = user.uid;
+
       const lienData = {
         tokenId,
         propertyId,
         borrowerAddress,
+        borrowerId,
         loanAmount: parseFloat(loanAmount),
         landPrice: parseFloat(landPrice),
         loanPeriod,
@@ -69,6 +72,7 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
           status: 'in-marketplace',
           tokenId,
           borrowerAddress,
+          borrowerId
         });
         console.log("Loan request updated in Firestore");
       } else {

@@ -13,6 +13,7 @@ const customStyles: CSSProperties = {
 
 interface LoanRequest {
   id: string;
+  borrowerId: string;
   propertyId: string;
   loanAmount: string;
   interestRate: string;
