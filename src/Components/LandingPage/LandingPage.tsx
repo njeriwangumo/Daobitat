@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef }  from "react";
 import "./LandingPage.css";
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/UserContext';
@@ -8,6 +8,7 @@ import SearchBox from "../SearchBox/SearchBox";
 export const LandingPage = () => {
     const { user } = useUser();
     const navigate = useNavigate();
+    const searchBoxRef = useRef<HTMLDivElement>(null);
 
     const handleUsernameClick = () => {
         if (user) {
@@ -23,10 +24,17 @@ export const LandingPage = () => {
                     navigate('/buyrentdashboard');
                     break;
                 default:
-                    navigate('/'); // Redirect to homepage if role is unknown
+                    navigate('/');
                     break;
             }
         }
+    };
+
+    const handleExploreClick = () => {
+        searchBoxRef.current?.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
     };
 
     return (
@@ -35,39 +43,44 @@ export const LandingPage = () => {
                 <div className="overlap-group">
                     <div className="bg" />
                     <div className="darkoverlay">
-                        <div className="search-box">
-                            <img className="search" alt="Search" src="https://img.icons8.com/?size=100&id=78341&format=png&color=000000" />
+                        <div className="content">
+                            <p className="find-your-perfect">
+                            Co-Own. Verify. Trace. <br />
+                            
+                            Verified Collateral.
+                            </p>
+                            <p className="we-re-getting-real">
+                                We're getting real about real estate. Your Gateway to Global Investing.
+                            </p>
+                            <button className="explore-button" onClick={handleExploreClick}>
+                                Explore
+                            </button>
                         </div>
-                        <p className="we-re-getting-real">
-                            We&#39;re getting real about real estate. Navigate the market with transparency.
-                        </p>
-                        <p className="find-your-perfect">
-                            Find your Perfect Fit. <br />
-                            Effortlessly
-                        </p>
                     </div>
-                    <div className="navbar">
-                        <div className="text-wrapper">Buy</div>
-                        <div className="div">Rent</div>
-                        <div className="text-wrapper-2">Sell</div>
-                        <div className="text-wrapper-3">Advertise</div>
-                        <div className="text-wrapper-7">Financing</div>
-
-                        {/*Only show signin if username does not esist*/}
-                        {!user && <Link to="/login" className="text-wrapper-4">Sign In</Link>}
-
-                        {/*Insert username here if it exists*/}
-                        {user && (
-                            <div className="text-wrapper-6" onClick={handleUsernameClick} style={{ cursor: 'pointer' }}>
-                                Hi, {user.name}
-                            </div>
-                        )}
-
-                        <div className="text-wrapper-5">DAOBITAT</div>
-                    </div>
+                    <nav className="navbar">
+                        <div className="nav-brand">DAOBITAT</div>
+                        <div className="nav-items">
+                            <div>Buy</div>
+                            <div>Rent</div>
+                            <div>Sell</div>
+                            <div>Advertise</div>
+                            <div>Financing</div>
+                            <div>About</div>
+                        </div>
+                        <div className="auth-section">
+                            {!user && <Link to="/login">Sign In</Link>}
+                            {user && (
+                                <div onClick={handleUsernameClick}>
+                                    Hi, {user.name}
+                                </div>
+                            )}
+                        </div>
+                    </nav>
                 </div>
             </div>
-            <SearchBox />
+            <div ref={searchBoxRef}>
+                <SearchBox />
+            </div>
             <Recommendations />
         </div>
     );

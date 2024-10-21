@@ -1,194 +1,264 @@
 .desktop {
     background-color: #ffffff;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     justify-content: center;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.overlap-group-wrapper {
+    background-color: #ffffff;
+    height: 100vh;
     width: 100%;
 }
 
-.desktop .overlap-group-wrapper {
-    background-color: #ffffff;
-    height: 1024px;
-    width: 100vw;
-}
-
-.desktop .overlap-group {
-    height: 1025px;
+.overlap-group {
+    height: 100%;
     position: relative;
-    top: -1px;
 }
 
-.desktop .bg {
+.bg {
     background-image: url(../../Assets/bg.jpg);
-    background-position: 50% 50%;
+    background-position: center;
     background-size: cover;
-    height: 1024px;
+    height: 100%;
     left: 0;
     position: absolute;
     top: 0;
-    width: 100vw;
+    width: 100%;
 }
 
-.desktop .darkoverlay {
-    background-color: #00000066;
-    height: 1024px;
+.darkoverlay {
+    background-color: rgba(0, 0, 0, 0.4);
+    height: 100%;
     left: 0;
     position: absolute;
-    top: 1px;
-    width: 653px;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-.desktop .search-box {
-    background-color: #ffffff40;
+.content {
+    color: #ffffff;
+    padding: 2rem;
+    max-width: 653px;
+    text-align: center;
+}
+
+.search-box {
+    background-color: rgba(255, 255, 255, 0.25);
     border-radius: 12px;
     height: 56px;
-    left: 100px;
-    position: absolute;
-    top: 627px;
-    width: 432px;
+    width: 100%;
+    max-width: 432px;
+    position: relative;
+    margin: 2rem auto 0;
 }
 
-.desktop .search {
+.search {
     height: 31px;
-    left: 391px;
     position: absolute;
-    top: 17px;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
     width: 31px;
 }
 
-.desktop .we-re-getting-real {
-    color: #ffffff;
+.we-re-getting-real {
     font-family: "Helvetica Light-Regular", Helvetica;
-    font-size: 30px;
+    font-size: 1.875rem;
     font-weight: 400;
-    left: 100px;
     letter-spacing: 0;
-    line-height: normal;
-    position: absolute;
-    top: 456px;
-    width: 480px;
+    line-height: 1.4;
+    margin-bottom: 2rem;
 }
 
-.desktop .find-your-perfect {
-    color: #ffffff;
+.find-your-perfect {
     font-family: "Helvetica-Regular", Helvetica;
-    font-size: 40px;
+    font-size: 2.5rem;
     font-weight: 400;
-    left: 100px;
     letter-spacing: 0;
-    line-height: normal;
-    position: absolute;
-    top: 340px;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
 }
-
-.desktop .navbar {
-    height: 92px;
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    position: absolute;
+    top: 0;
     left: 0;
-    position: absolute;
-    top: 1px;
-    width: 1440px;
+    right: 0;
+    background-color: rgba(35, 26, 31, 0.7);
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    z-index: 1000;
 }
 
-.desktop .text-wrapper {
-    color: #ffffff;
-    font-family: "Helvetica-Regular", Helvetica;
-    font-size: 16px;
-    font-weight: 400;
-    left: 260px;
-    letter-spacing: 0;
-    line-height: normal;
-    position: absolute;
-    top: 49px;
-    white-space: nowrap;
-}
-
-.desktop .div {
-    color: #ffffff;
-    font-family: "Helvetica-Regular", Helvetica;
-    font-size: 16px;
-    font-weight: 400;
-    left: 400px;
-    letter-spacing: 0;
-    line-height: normal;
-    position: absolute;
-    top: 49px;
-    white-space: nowrap;
-}
-
-.desktop .text-wrapper-2 {
-    color: #ffffff;
-    font-family: "Helvetica-Regular", Helvetica;
-    font-size: 16px;
-    font-weight: 400;
-    left: 323px;
-    letter-spacing: 0;
-    line-height: normal;
-    position: absolute;
-    top: 49px;
-    white-space: nowrap;
-}
-
-.desktop .text-wrapper-3 {
-    color: #ffffff;
-    font-family: "Helvetica-Regular", Helvetica;
-    font-size: 16px;
-    font-weight: 400;
-    left: 482px;
-    letter-spacing: 0;
-    line-height: normal;
-    position: absolute;
-    top: 49px;
-    white-space: nowrap;
-}
-
-.desktop .text-wrapper-4 {
-    color: #ffffff;
-    font-family: "Helvetica-Regular", Helvetica;
-    font-size: 16px;
-    font-weight: 400;
-    left: 229px;
-    letter-spacing: 0;
-    line-height: normal;
-    position: absolute;
-    top: 49px;
-    white-space: nowrap;
-}
-
-.desktop .text-wrapper-5 {
-    color: #ffffff;
+.nav-brand {
     font-family: "Brown Sugar-Regular", Helvetica;
-    font-size: 24px;
-    font-weight: 400;
-    left: 61px;
-    letter-spacing: 0;
-    line-height: normal;
-    position: absolute;
-    top: 46px;
-    white-space: nowrap;
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: #B7e3cc;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    transition: all 0.3s ease;
 }
 
-.desktop .text-wrapper-6 {
-    color: #ffffff;
-    font-family: "Brown Sugar-Regular", Helvetica;
-    font-size: 16px;
-    font-weight: 400;
-    right: 152px;
-    letter-spacing: 0;
-    line-height: normal;
-    position: absolute;
-    top: 46px;
-    white-space: nowrap;
+.nav-brand:hover {
+    transform: scale(1.05);
 }
 
-.desktop .text-wrapper-7 {
+.nav-items {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-items > div, .auth-section > div, .auth-section > a {
     color: #ffffff;
     font-family: "Helvetica-Regular", Helvetica;
-    font-size: 16px;
+    font-size: 1rem;
     font-weight: 400;
-    left: 570px;
-    letter-spacing: 0;
-    line-height: normal;
-    position: absolute;
-    top: 49px;
     white-space: nowrap;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.nav-items > div::after, .auth-section > div::after, .auth-section > a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -5px;
+    left: 50%;
+    background-color: #B7e3cc;
+    transition: all 0.3s ease;
+}
+
+.nav-items > div:hover, .auth-section > div:hover, .auth-section > a:hover {
+    color: #B7e3cc;
+}
+
+.nav-items > div:hover::after, .auth-section > div:hover::after, .auth-section > a:hover::after {
+    width: 100%;
+    left: 0;
+}
+
+.auth-section {
+    display: flex;
+    align-items: center;
+}
+
+.auth-section > div, .auth-section > a {
+    padding: 0.5rem 1rem;
+    border: 1px solid #B7e3cc;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+
+.auth-section > div:hover, .auth-section > a:hover {
+    background-color: #B7e3cc;
+    color: #000000;
+}
+
+.explore-button {
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #ffffff;
+    background-color: transparent;
+    border: 2px solid #B7e3cc;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 2rem;
+    letter-spacing: 1px;
+}
+
+.explore-button:hover {
+    background-color: #B7e3cc;
+    color: #000000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(183, 227, 204, 0.3);
+}
+
+.explore-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(183, 227, 204, 0.2);
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        padding: 1rem;
+    }
+
+    .nav-brand {
+        margin-bottom: 1rem;
+    }
+
+    .nav-items {
+        justify-content: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .auth-section {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .auth-section {
+        width: 100%;
+        text-align: center;
+    }
+
+    .find-your-perfect {
+        font-size: 2rem;
+    }
+
+    .we-re-getting-real {
+        font-size: 1.5rem;
+    }
+
+    .explore-button {
+        padding: 0.8rem 2rem;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 0.5rem;
+    }
+
+    .nav-items {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .nav-items > div, .auth-section > div, .auth-section > a {
+        font-size: 0.875rem;
+    }
+
+    .find-your-perfect {
+        font-size: 1.5rem;
+    }
+
+    .we-re-getting-real {
+        font-size: 1.25rem;
+    }
+
+    .content {
+        padding: 1rem;
+    }
+
+    .explore-button {
+        padding: 0.7rem 1.8rem;
+        font-size: 0.9rem;
+    }
 }
