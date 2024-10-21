@@ -4,12 +4,10 @@ import './CreateLien.css';
 import { doc, setDoc, collection, addDoc, updateDoc, query, where, getDocs} from 'firebase/firestore';
 import { firestore } from '../../firebaseConfig';
 import { useUser } from '../../contexts/UserContext'; 
+import CertificateOfLienABI from '../certificateOfLienABI';
 
-const CONTRACT_ADDRESS = '0x5942c3c250dDEAAcD69d1aB7cCD81c261cF15204';
-const CONTRACT_ABI = [
-  "function createLien(uint256 landPrice, uint256 period, uint256 interestRate) public payable returns (uint256)",
-  "event LienCreated(uint256 indexed tokenId, address indexed borrower, uint256 landPrice, uint256 period, uint256 interestRate)"
-];
+const CONTRACT_ADDRESS = '0x5BD51c30473CFCc8F5a27874dE5f9D105a8012d8';
+
 
 interface CreateLienProps {
   onClose: () => void;
@@ -147,7 +145,7 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       const provider = new ethers.BrowserProvider(window.ethereum);
       const signer = await provider.getSigner();
-      const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, CertificateOfLienABI, signer);
 
       const balance = await provider.getBalance(await signer.getAddress());
       console.log("Account balance:", ethers.formatEther(balance), "ETH");
@@ -158,37 +156,81 @@ const CreateLienComponent: React.FC<CreateLienProps> = ({ onClose, propertyId, l
 
       const collateralAmount = landPriceWei / BigInt(10); 
 
-      const tx = await contract.createLien(landPriceWei, periodInSeconds, interestRateScaled, {
+      const tx = await contract.createLien(landPriceWei, periodInSeconds, interestRateScaled, ethers.parseEther(loanAmount), {
         value: collateralAmount
       });
-
+  
       setSuccess("Transaction sent! Waiting for confirmation...");
-
+  
       const receipt = await tx.wait();
       console.log("Transaction confirmed:", receipt);
-
-      // Parse the logs to find the LienCreated event
-      const interfacer = new ethers.Interface(CONTRACT_ABI);
+  
+      // Detailed logging of the receipt
+      console.log("Transaction hash:", receipt.hash);
+      console.log("Block number:", receipt.blockNumber);
+      console.log("From:", receipt.from);
+      console.log("To:", receipt.to);
+      console.log("Gas used:", receipt.gasUsed.toString());
+  
+      console.log("All logs:", receipt.logs);
+  
+      // Try multiple methods to find the LienCreated event
+      let newTokenId;
+  
+      // Method 1: Using ethers.js Interface
+      const interfacer = new ethers.Interface(CertificateOfLienABI);
       const lienCreatedEvent = receipt.logs
         .map((log: any) => {
           try {
             return interfacer.parseLog(log);
-          } catch {
+          } catch (error) {
+            console.log("Error parsing log:", error);
             return null;
           }
         })
         .find((event: any) => event?.name === 'LienCreated');
-
-        if (lienCreatedEvent && lienCreatedEvent.args) {
-          const tokenId = lienCreatedEvent.args[0].toString();
-          const borrowerAddress = await signer.getAddress();
   
-          await addLienToFirestore(tokenId, borrowerAddress);
-          setSuccess(`Lien created successfully! Token ID: ${tokenId.toString()}`);
-      } else {
-        setSuccess("Lien created successfully, but couldn't retrieve Token ID.");
+      if (lienCreatedEvent && lienCreatedEvent.args) {
+        newTokenId = lienCreatedEvent.args[0].toString();
+        console.log("Method 1 - Found newTokenId:", newTokenId);
       }
-
+  
+      // Method 2: Manual parsing
+      if (!newTokenId) {
+        const lienCreatedLog = receipt.logs.find(
+          (log: any) => log.topics[0] === ethers.id("LienCreated(uint256,address,address,uint256,uint256,uint256)")
+        );
+  
+        if (lienCreatedLog) {
+          const decodedLog = interfacer.parseLog({
+            topics: lienCreatedLog.topics as string[],
+            data: lienCreatedLog.data
+          });
+          if (decodedLog && decodedLog.args) {
+            newTokenId = decodedLog.args[0].toString();
+            console.log("Method 2 - Found newTokenId:", newTokenId);
+          }
+        }
+      }
+  
+      // Method 3: Check receipt events directly
+      if (!newTokenId && receipt.events) {
+        const lienCreatedEvent = receipt.events.find((e: any) => e.event === 'LienCreated');
+        if (lienCreatedEvent && lienCreatedEvent.args) {
+          newTokenId = lienCreatedEvent.args[0].toString();
+          console.log("Method 3 - Found newTokenId:", newTokenId);
+        }
+      }
+  
+      if (newTokenId) {
+        const borrowerAddress = await signer.getAddress();
+        await addLienToFirestore(newTokenId, borrowerAddress);
+        setSuccess(`Lien created successfully! New Token ID: ${newTokenId}`);
+      } else {
+        console.error("Failed to retrieve newTokenId from any method");
+        setSuccess("Lien created successfully, but couldn't retrieve New Token ID.");
+      }
+  
     } catch (err) {
       console.error("Error creating lien:", err);
       setError("Failed to create lien. Check console for details.");

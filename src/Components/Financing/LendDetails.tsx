@@ -1,8 +1,11 @@
 import React, { useState ,useEffect} from 'react';
 import PriceRangeCheckboxes from './PriceRange';
 import { FaSearch } from 'react-icons/fa';
-import { collection, getDocs ,getDoc, doc,DocumentData} from 'firebase/firestore';
+import { collection, getDocs ,getDoc, doc,DocumentData,updateDoc} from 'firebase/firestore';
 import { firestore } from '../../firebaseConfig'; 
+import { ethers } from 'ethers';
+import CertificateOfLienABI from '../certificateOfLienABI';
+
 
 interface NFTMetadata {
   name: string;
@@ -46,7 +49,64 @@ interface PriceRange {
   max: number | null;
 }
 
+const CONTRACT_ADDRESS = '0x5BD51c30473CFCc8F5a27874dE5f9D105a8012d8';
 
+const handleInvest = async (nft: NFT) => {
+  try {
+    if (!window.ethereum) {
+      throw new Error("Please install MetaMask!");
+    }
+
+    await window.ethereum.request({ method: 'eth_requestAccounts' });
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const contract = new ethers.Contract(CONTRACT_ADDRESS, CertificateOfLienABI, signer);
+
+    // Get the latest lien details
+    const lienDetails = await contract.getLienDetails(nft.tokenId);
+    
+    if (lienDetails.lender !== ethers.ZeroAddress) {
+      throw new Error("This loan has already been funded");
+    }
+
+    // Convert loanAmount to wei
+    const loanAmountWei = ethers.parseEther(nft.loanAmount.toString());
+
+    // Send the transaction
+    const tx = await contract.invest(nft.tokenId, { value: loanAmountWei });
+    
+    // Wait for the transaction to be mined
+    const receipt = await tx.wait();
+    
+    console.log("Investment successful", receipt);
+
+    // Calculate repayment amount and period
+    const interestRate = parseFloat(nft.interestRate) / 100; // Convert percentage to decimal
+    const loanPeriodDays = parseInt(nft.loanPeriod);
+    const repaymentAmount = nft.loanAmount * (1 + (interestRate * loanPeriodDays / 365));
+    const repaymentDate = new Date();
+    repaymentDate.setDate(repaymentDate.getDate() + loanPeriodDays);
+
+    // Update Firestore
+    const marketplaceRef = doc(firestore, 'marketplace', nft.id);
+    await updateDoc(marketplaceRef, {
+      lenderAddress: await signer.getAddress(),
+      repaymentAmount: repaymentAmount,
+      repaymentDate: repaymentDate,
+      status: 'funded'
+    });
+
+    alert("Investment successful! Transaction hash: " + receipt.transactionHash);
+    
+    // Refresh the NFT list or update the UI as needed
+    // This might involve calling a function to refetch the NFTs or updating the local state
+    // For example: await fetchNFTsWithDetails();
+
+  } catch (error) {
+    console.error("Error investing:", error);
+    alert("Failed to invest. See console for details.");
+  }
+};
 
 const NFTMarketplace: React.FC = () => {
   const [nfts, setNfts] = useState<NFT[]>([]);
@@ -154,8 +214,41 @@ const NFTMarketplace: React.FC = () => {
     alert(`Viewing NFT with ID: ${id}`);
   };
 
-  const handleInvest = (id: string): void => {
-    alert(`Viewing NFT with ID: ${id}`);
+  const handleInvest = async (nft: NFT) => {
+    try {
+      if (!window.ethereum) {
+        throw new Error("Please install MetaMask!");
+      }
+
+      await window.ethereum.request({ method: 'eth_requestAccounts' });
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      const signer = await provider.getSigner();
+      const contract = new ethers.Contract(CONTRACT_ADDRESS, CertificateOfLienABI, signer);
+
+      // Get the latest lien details
+      const lienDetails = await contract.getLienDetails(nft.tokenId);
+      
+      if (lienDetails.lender !== ethers.ZeroAddress) {
+        throw new Error("This loan has already been funded");
+      }
+
+      // Convert loanAmount to wei
+      const loanAmountWei = ethers.parseEther(nft.loanAmount.toString());
+
+      // Send the transaction
+      const tx = await contract.invest(nft.tokenId, { value: loanAmountWei });
+      
+      // Wait for the transaction to be mined
+      const receipt = await tx.wait();
+      
+      console.log("Investment successful", receipt);
+      alert("Investment successful! Transaction hash: " + receipt.transactionHash);
+      
+      // You might want to update the UI or refetch the NFTs here
+    } catch (error) {
+      console.error("Error investing:", error);
+      alert("Failed to invest. See console for details.");
+    }
   };
 
   return (
@@ -212,7 +305,7 @@ const NFTMarketplace: React.FC = () => {
               View
             </button>
             <button 
-              onClick={() => handleInvest(nft.id)}
+              onClick={() => handleInvest(nft)}
               className="mt-2 bg-[#533c47] text-white px-4 py-2 rounded w-full hover:bg-[#b7e3cc] transition-colors duration-300 ease-in-out"
             >
               Invest

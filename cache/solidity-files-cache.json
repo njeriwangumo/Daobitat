@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\VICTUS\\Documents\\WebApps\\DaoBitat\\Daobitat\\contracts\\CertificateOfLien.sol": {
-      "lastModificationDate": 1728398916519,
-      "contentHash": "4486ff4ea7c9c7ba0d3a500823e6a2ec",
+      "lastModificationDate": 1729466882745,
+      "contentHash": "5224a1ce9b06331fe0957e213711d377",
       "sourceName": "contracts/CertificateOfLien.sol",
       "solcConfig": {
         "version": "0.8.24",

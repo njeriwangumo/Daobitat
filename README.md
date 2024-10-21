@@ -5,7 +5,7 @@ DAO-Bitat is a decentralized property listing platform that revolutionizes real 
 ## Current Status
 
 - **MVP Live**: Our Minimum Viable Product is currently live on the Base testnet.
-- **Contract Address**: `0x5942c3c250dDEAAcD69d1aB7cCD81c261cF15204` (deployed on Base)
+- **Contract Address**: `0x5BD51c30473CFCc8F5a27874dE5f9D105a8012d8` (deployed on Base)
 
 ## Technology Stack
 
@@ -69,6 +69,18 @@ If the borrower fails to repay the loan within the given period, the contract ow
 5. Lender selects the loan
 6. Loan terms set on smart contract (e.g., interest rate)
 7. Monthly payments processed through billings page
+
+In the handleInvest function:
+
+We check if the loan has already been funded by calling getLienDetails and checking the lender address.
+We use the invest function from the smart contract to make the investment.
+After a successful transaction, we calculate the repayment amount and date based on the loan details.
+We update the Firestore document in the 'marketplace' collection with the lender's address, repayment amount, repayment date, and change the status to 'funded'.
+The smart contract's invest function is responsible for transferring the funds to the borrower, so we don't need to handle that explicitly in our TypeScript code.
+
+A borrower creates a lien using createLien(), which mints an NFT and records the loan details.
+The borrower can repay the loan through repayLoan(), which calculates the due amount based on interest accrued over time.
+If the borrower fails to repay the loan within the given period, the contract owner can take possession of the lien (symbolizing a default) using transferAfterDefault().
 
 ## Database Structure
 
