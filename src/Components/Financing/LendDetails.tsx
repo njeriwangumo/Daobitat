@@ -5,6 +5,7 @@ import { collection, getDocs ,getDoc, doc,DocumentData,updateDoc} from 'firebase
 import { firestore } from '../../firebaseConfig'; 
 import { ethers } from 'ethers';
 import CertificateOfLienABI from '../certificateOfLienABI';
+import PropertyFocusPopup from '../LandingPage/Recommended/PropertyFocusPopup';
 
 
 interface NFTMetadata {
@@ -111,6 +112,8 @@ const NFTMarketplace: React.FC = () => {
   const [location, setLocation] = useState('');
   const [selectedPriceRanges, setSelectedPriceRanges] = useState<PriceRange[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [showPropertyPopup, setShowPropertyPopup] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<NFT | null>(null);
 
   useEffect(() => {
     const fetchNFTsWithDetails = async () => {
@@ -206,11 +209,16 @@ const NFTMarketplace: React.FC = () => {
     Price Ranges: ${selectedPriceRanges.map(range => range.label).join(', ')}`);
   };
 
-
-  const handleView = (id: string): void => {
-    alert(`Viewing NFT with ID: ${id}`);
+  const handleClosePopup = () => {
+    setShowPropertyPopup(false);
+    setSelectedProperty(null);
   };
 
+
+  const handleView = (nft: NFT): void => {
+    setSelectedProperty(nft);
+    setShowPropertyPopup(true);
+  };
   const handleInvest = async (nft: NFT) => {
     try {
       if (!window.ethereum) {
@@ -303,7 +311,7 @@ const NFTMarketplace: React.FC = () => {
             <p className="text-sm"><strong>Posted:</strong> {nft.datePosted}</p>
             <div className="flex space-x-2 mt-2">
             <button 
-              onClick={() => handleView(nft.id)}
+              onClick={() => handleView(nft)}
               className="mt-2 bg-[#533c47] text-white px-4 py-2 rounded w-full hover:bg-[#b7e3cc] transition-colors duration-300 ease-in-out"
             >
               View
@@ -318,6 +326,20 @@ const NFTMarketplace: React.FC = () => {
           </div>
         ))}
       </div>
+
+      {showPropertyPopup && selectedProperty && (
+        <PropertyFocusPopup
+          property={{
+            ...selectedProperty.propertyDetails,
+            idc: selectedProperty.propertyId,
+            userId: selectedProperty.borrowerId,
+            daoenabled: true, // Assuming all properties in the marketplace are DAO-enabled
+            additionalComments: selectedProperty.metadata.description,
+            // Add any other properties that PropertyFocusPopup expects
+          }}
+          onClose={handleClosePopup}
+        />
+      )}
     </div>
   );
 };

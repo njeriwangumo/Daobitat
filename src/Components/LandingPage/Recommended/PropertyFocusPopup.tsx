@@ -40,6 +40,9 @@ const PropertyFocusPopup: React.FC<PropertyFocusPopupProps> = ({ property, onClo
   const pricePerToken = property.price / 10;
   const totalCost = pricePerToken * tokenAmount;
 
+  // Fallback image URL or you can use a local asset
+  const fallbackImageUrl = 'https://via.placeholder.com/400x300?text=No+Image+Available';
+
   return (
     <div className="property-details-popup">
       <div className="popup-content">
@@ -50,7 +53,11 @@ const PropertyFocusPopup: React.FC<PropertyFocusPopupProps> = ({ property, onClo
         </button>
         <h2 className="property-title">{property.propertyName}</h2>
         <div className="property-image-container">
-          <img src={property.images[0]} alt={property.propertyName} className="property-image" />
+          {property.images && property.images.length > 0 ? (
+            <img src={property.images[0]} alt={property.propertyName} className="property-image" />
+          ) : (
+            <img src={fallbackImageUrl} alt="No image available" className="property-image" />
+          )}
         </div>
         <div className="property-details">
           <div className="detail-item">
