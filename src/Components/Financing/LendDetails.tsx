@@ -253,10 +253,17 @@ const NFTMarketplace: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 ">
-      <h1 className="text-4xl font-bold mb-4">Venture Vineyard</h1>
+      <h1 className="text-4xl font-bold mb-4">
+    <span className="text-[#b7e3cc]">Venture</span>{" "}
+    <span className="text-white">Vineyard</span>
+  </h1>
 
       <div className="mb-4">
-        <h2 className="text-2xl font-semibold mb-4">Piece together a vibrant tapestry of projects, where every investment adds color to the big picture</h2>
+      <h2 className="text-2xl font-light text-white mb-4 leading-relaxed">
+    Piece together a vibrant tapestry{" "}
+    <span className="text-[#b7e3cc]">of projects</span>, where every investment{" "}
+    <span className="text-[#b7e3cc]">adds color</span> to the big picture
+  </h2>
         <div className="flex items-center space-x-2">
           <input
             type="text"
