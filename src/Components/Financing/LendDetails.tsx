@@ -98,10 +98,7 @@ const handleInvest = async (nft: NFT) => {
 
     alert("Investment successful! Transaction hash: " + receipt.transactionHash);
     
-    // Refresh the NFT list or update the UI as needed
-    // This might involve calling a function to refetch the NFTs or updating the local state
-    // For example: await fetchNFTsWithDetails();
-
+ 
   } catch (error) {
     console.error("Error investing:", error);
     alert("Failed to invest. See console for details.");
