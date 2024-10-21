@@ -18,7 +18,7 @@ interface Invoice {
 interface DownloadButtonProps {
   url: string;
   filename: string;
-  label?: string;
+  label: string;
 }
 
 const Billings: React.FC = () => {
@@ -27,11 +27,10 @@ const Billings: React.FC = () => {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   const dummyData = {
-    name: 'Mario Seijo',
+    name: 'Lien Ref 0x5942c3c250dDEAAcD69d1aB7cCD81c261cF15204',
     earnings: 221.00,
     totalBilled: 250.00,
     totalFees: 29.00,
-    jobName: 'Web Development Project',
     feesAndTaxes: 29.00,
     billed: 250.00,
   };
@@ -43,9 +42,9 @@ const Billings: React.FC = () => {
     loanName: 'Home Loan',
     assetLien: 'Property at 123 Main St',
     interestRate: 3.5,
-    openDate: '2023-01-01',
-    maturityDate: '2053-01-01',
-    terms: '30 years',
+    openDate: '2024-11-05',
+    maturityDate: '2025-05-05',
+    terms: '30 months',
     balanceAmount: 48000,
     jobName: 'Primary Residence Loan',
     feesDetails: 'Origination fee: $1000, Appraisal fee: $500',
